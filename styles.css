@@ -648,6 +648,25 @@ body {
     max-width: 600px;
 }
 
+.about-recruitment {
+    max-width: 1000px;
+    margin: 4rem auto 0;
+    padding: 2rem;
+    background-color: rgba(10, 10, 10, 0.03);
+    border-left: 4px solid #0a0a0a;
+    border-radius: 4px;
+}
+
+.about-recruitment-text {
+    font-family: 'Montserrat', sans-serif;
+    font-size: clamp(0.95rem, 1.3vw, 1.05rem);
+    line-height: 1.8;
+    color: rgba(10, 10, 10, 0.9);
+    text-align: left;
+    margin: 0;
+    font-style: italic;
+}
+
 /* Smooth Scrolling */
 html {
     scroll-behavior: smooth;
@@ -765,6 +784,11 @@ html {
 
     .about-description {
         max-width: 100%;
+    }
+
+    .about-recruitment {
+        margin: 3rem auto 0;
+        padding: 1.5rem;
     }
 
     .about-instagram-link,
