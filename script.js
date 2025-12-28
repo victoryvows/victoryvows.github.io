@@ -59,26 +59,82 @@ window.addEventListener('scroll', () => {
     });
 });
 
-// Fade in animation on scroll
+// Enhanced fade in animation on scroll
 const observerOptions = {
     threshold: 0.1,
     rootMargin: '0px 0px -100px 0px'
 };
 
 const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
+    entries.forEach((entry, index) => {
         if (entry.isIntersecting) {
-            entry.target.style.opacity = '1';
-            entry.target.style.transform = 'translateY(0)';
+            setTimeout(() => {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }, index * 100);
         }
     });
 }, observerOptions);
 
 document.querySelectorAll('.section').forEach(section => {
     section.style.opacity = '0';
-    section.style.transform = 'translateY(30px)';
-    section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    section.style.transform = 'translateY(50px)';
+    section.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
     observer.observe(section);
+});
+
+// Animate elements within sections
+const elementObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry, index) => {
+        if (entry.isIntersecting) {
+            setTimeout(() => {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }, index * 150);
+        }
+    });
+}, { threshold: 0.2 });
+
+document.querySelectorAll('.experience-content-box > *, .about-profile > *, .contact-form').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(30px)';
+    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    elementObserver.observe(el);
+});
+
+// Parallax effect for hero background
+let lastScrollTop = 0;
+window.addEventListener('scroll', () => {
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    const heroBackground = document.querySelector('.hero-background');
+    const navbar = document.querySelector('.navbar');
+    
+    if (heroBackground && scrollTop < window.innerHeight) {
+        const parallaxSpeed = 0.5;
+        heroBackground.style.transform = `translateY(${scrollTop * parallaxSpeed}px) scale(1.1)`;
+    }
+    
+    // Navbar background opacity on scroll
+    if (navbar) {
+        if (scrollTop > 50) {
+            navbar.style.background = 'rgba(10, 10, 10, 0.95)';
+        } else {
+            navbar.style.background = 'rgba(10, 10, 10, 0.3)';
+        }
+    }
+    
+    lastScrollTop = scrollTop;
+});
+
+
+// Add mouse move parallax effect to hero content
+document.addEventListener('mousemove', (e) => {
+    const heroContent = document.querySelector('.hero-content');
+    if (heroContent && window.pageYOffset < window.innerHeight) {
+        const x = (e.clientX / window.innerWidth - 0.5) * 20;
+        const y = (e.clientY / window.innerHeight - 0.5) * 20;
+        heroContent.style.transform = `translate(${x}px, ${y}px)`;
+    }
 });
 
 // Background music autoplay with user interaction

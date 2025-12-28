@@ -18,6 +18,22 @@ body {
     overflow-x: hidden;
 }
 
+/* Smooth page transitions */
+* {
+    scroll-behavior: smooth;
+}
+
+/* Add subtle glow effect on hover for interactive elements */
+a, button {
+    position: relative;
+}
+
+/* Loading animation for images */
+.experience-image,
+.about-image {
+    transition: opacity 0.3s ease;
+}
+
 /* Navigation */
 .navbar {
     position: fixed;
@@ -43,6 +59,11 @@ body {
     width: 30px;
     height: auto;
     display: block;
+    transition: transform 0.3s ease;
+}
+
+.nav-logo:hover .logo-image {
+    transform: scale(1.1) rotate(5deg);
 }
 
 .hamburger {
@@ -94,11 +115,28 @@ body {
     font-weight: 400;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    position: relative;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background-color: rgba(255, 255, 255, 0.5);
+    transition: width 0.3s ease;
 }
 
 .nav-link:hover {
     opacity: 0.7;
+    transform: translateY(-2px);
+}
+
+.nav-link:hover::after {
+    width: 100%;
 }
 
 .nav-link.active {
@@ -128,6 +166,11 @@ body {
 
 .nav-social .audio-toggle:hover {
     opacity: 0.7;
+    transform: scale(1.1);
+}
+
+.nav-social .audio-toggle {
+    transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 .nav-social .audio-toggle {
@@ -168,6 +211,11 @@ body {
 
 .nav-social .instagram-icon:hover {
     opacity: 0.7;
+    transform: scale(1.1) rotate(5deg);
+}
+
+.nav-social .instagram-icon {
+    transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 .nav-social .instagram-icon svg {
@@ -193,6 +241,17 @@ body {
     bottom: 0;
     background: url('background.jpg') center center / cover no-repeat;
     z-index: -2;
+    animation: subtleZoom 20s ease-in-out infinite;
+    transform: scale(1.1);
+}
+
+@keyframes subtleZoom {
+    0%, 100% {
+        transform: scale(1.1);
+    }
+    50% {
+        transform: scale(1.15);
+    }
 }
 
 .palm-overlay {
@@ -205,6 +264,16 @@ body {
         radial-gradient(circle at 20% 50%, rgba(13, 27, 15, 0.8) 0%, transparent 50%),
         radial-gradient(circle at 80% 50%, rgba(13, 27, 15, 0.8) 0%, transparent 50%);
     z-index: -1;
+    animation: pulseOverlay 8s ease-in-out infinite;
+}
+
+@keyframes pulseOverlay {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.8;
+    }
 }
 
 .hero-background::before {
@@ -227,6 +296,7 @@ body {
     padding: 8rem 2rem 4rem;
     max-width: 1200px;
     margin: 0 auto;
+    transition: transform 0.1s ease-out;
 }
 
 .branding {
@@ -326,6 +396,7 @@ body {
     margin-top: 4rem;
     display: flex;
     justify-content: center;
+    animation: float 3s ease-in-out infinite;
 }
 
 .bottom-logo .logo-image {
@@ -333,6 +404,31 @@ body {
     height: auto;
     display: block;
     opacity: 0.8;
+    transition: transform 0.3s ease;
+}
+
+.bottom-logo .logo-image:hover {
+    transform: scale(1.2) rotate(5deg);
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
 }
 
 /* Section Styles */
@@ -340,6 +436,28 @@ body {
     min-height: 100vh;
     padding: 8rem 2rem;
     background-color: #0a0a0a;
+    position: relative;
+    overflow: hidden;
+}
+
+.section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.03), transparent);
+    animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        left: -100%;
+    }
+    100% {
+        left: 100%;
+    }
 }
 
 .section-white {
@@ -363,6 +481,28 @@ body {
     text-align: center;
     margin-bottom: 2rem;
     color: #ffffff;
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+    animation: expandLine 1s ease-out forwards;
+    animation-delay: 0.5s;
+}
+
+@keyframes expandLine {
+    to {
+        width: 100px;
+    }
 }
 
 .section-content {
@@ -399,6 +539,18 @@ body {
     text-align: center;
     color: #0a0a0a;
     margin-bottom: 2rem;
+    animation: fadeInScale 0.8s ease-out;
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 
 .experience-heading {
@@ -443,6 +595,13 @@ body {
     height: auto;
     display: block;
     object-fit: cover;
+    transition: transform 0.5s ease, filter 0.5s ease;
+    filter: brightness(1);
+}
+
+.experience-image-wrapper:hover .experience-image {
+    transform: scale(1.05);
+    filter: brightness(1.1);
 }
 
 .experience-pricing {
@@ -453,6 +612,17 @@ body {
     text-align: center;
     color: #0a0a0a;
     margin: 3rem 0 0.5rem 0;
+    animation: pulseText 2s ease-in-out infinite;
+    animation-delay: 1s;
+}
+
+@keyframes pulseText {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.8;
+    }
 }
 
 .experience-pricing-note {
@@ -474,13 +644,22 @@ body {
     text-decoration: none;
     font-family: 'Montserrat', sans-serif;
     font-size: clamp(0.9rem, 1.2vw, 1rem);
-    transition: opacity 0.3s ease;
+    transition: opacity 0.3s ease, transform 0.3s ease;
     justify-content: center;
     width: 100%;
 }
 
 .experience-youtube-link:hover {
     opacity: 0.6;
+    transform: translateX(5px);
+}
+
+.experience-youtube-link:hover .experience-youtube-icon {
+    transform: scale(1.2);
+}
+
+.experience-youtube-icon {
+    transition: transform 0.3s ease;
 }
 
 .experience-youtube-icon {
@@ -542,6 +721,12 @@ body {
     height: 100%;
     object-fit: cover;
     border-radius: 8px;
+    transition: transform 0.5s ease, box-shadow 0.5s ease;
+}
+
+.about-image-wrapper:hover .about-image {
+    transform: scale(1.05) rotate(1deg);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
 .about-content {
@@ -561,6 +746,11 @@ body {
     color: #0a0a0a;
     margin-bottom: 0.5rem;
     line-height: 1.2;
+    transition: transform 0.3s ease;
+}
+
+.about-name:hover {
+    transform: translateX(5px);
 }
 
 .about-role {
@@ -607,12 +797,18 @@ body {
 
 .about-instagram-link:hover {
     opacity: 0.6;
+    transform: translateX(5px);
+}
+
+.about-instagram-link:hover .about-instagram-icon {
+    transform: scale(1.2) rotate(5deg);
 }
 
 .about-instagram-icon {
     width: 20px;
     height: 20px;
     display: block;
+    transition: transform 0.3s ease;
 }
 
 .about-youtube-link {
@@ -624,17 +820,23 @@ body {
     text-decoration: none;
     font-family: 'Montserrat', sans-serif;
     font-size: clamp(0.9rem, 1.2vw, 1rem);
-    transition: opacity 0.3s ease;
+    transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 .about-youtube-link:hover {
     opacity: 0.6;
+    transform: translateX(5px);
+}
+
+.about-youtube-link:hover .about-youtube-icon {
+    transform: scale(1.2);
 }
 
 .about-youtube-icon {
     width: 20px;
     height: 20px;
     display: block;
+    transition: transform 0.3s ease;
 }
 
 .about-recruitment-note {
@@ -646,25 +848,6 @@ body {
     margin-top: 2rem;
     margin-bottom: 0;
     max-width: 600px;
-}
-
-.about-recruitment {
-    max-width: 1000px;
-    margin: 4rem auto 0;
-    padding: 2rem;
-    background-color: rgba(10, 10, 10, 0.03);
-    border-left: 4px solid #0a0a0a;
-    border-radius: 4px;
-}
-
-.about-recruitment-text {
-    font-family: 'Montserrat', sans-serif;
-    font-size: clamp(0.95rem, 1.3vw, 1.05rem);
-    line-height: 1.8;
-    color: rgba(10, 10, 10, 0.9);
-    text-align: left;
-    margin: 0;
-    font-style: italic;
 }
 
 /* Smooth Scrolling */
@@ -786,11 +969,6 @@ html {
         max-width: 100%;
     }
 
-    .about-recruitment {
-        margin: 3rem auto 0;
-        padding: 1.5rem;
-    }
-
     .about-instagram-link,
     .about-youtube-link {
         display: flex;
@@ -824,6 +1002,22 @@ html {
     text-align: center;
     margin-bottom: 2rem;
     color: #ffffff;
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+
+.contact-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+    animation: expandLine 1s ease-out forwards;
+    animation-delay: 0.5s;
 }
 
 .contact-description {
@@ -878,7 +1072,7 @@ html {
     background-color: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 4px;
-    transition: border-color 0.3s ease, background-color 0.3s ease;
+    transition: border-color 0.3s ease, background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .form-input:focus,
@@ -886,6 +1080,8 @@ html {
     outline: none;
     border-color: rgba(255, 255, 255, 0.4);
     background-color: rgba(255, 255, 255, 0.08);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
 }
 
 .form-textarea {
@@ -943,10 +1139,16 @@ html {
 .form-submit-btn:hover {
     background-color: rgba(255, 255, 255, 0.9);
     transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
 }
 
 .form-submit-btn:active {
     transform: translateY(0);
+}
+
+.animate-in {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
 }
 
 .contact-social {
