@@ -4,7 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Victory Vows - Film House</title>
-    <link rel="icon" type="image/png" href="wedding_logo_black.png">
+    <meta name="description" content="Cinematic wedding films and beautiful digital wedding invitations — crafted by Victory Vows.">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Victory Vows">
+    <meta property="og:title" content="Victory Vows — Wedding Films &amp; Websites">
+    <meta property="og:description" content="Cinematic wedding films and beautiful digital wedding invitations — crafted by Victory Vows.">
+    <meta property="og:image" content="https://victoryvows.github.io/assets/images/wedding_image.jpg">
+    <meta property="og:url" content="https://victoryvows.github.io/">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" type="image/png" href="assets/images/wedding_logo_black.png">
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,7 +21,7 @@
 <body>
     <!-- Background Music -->
     <audio id="bgMusic" autoplay loop>
-        <source src="photograph.mp3" type="audio/mpeg">
+        <source src="assets/audio/photograph.mp3" type="audio/mpeg">
     </audio>
 
     <!-- Navigation -->
@@ -21,7 +29,7 @@
         <div class="nav-container">
             <div class="nav-logo">
                 <a href="#home">
-                    <img src="wedding_logo.png" alt="Victory Vows Logo" class="logo-image">
+                    <img src="assets/images/wedding_logo.png" alt="Victory Vows Logo" class="logo-image">
                 </a>
             </div>
             <button class="hamburger" id="hamburger" aria-label="Toggle Menu">
@@ -30,7 +38,7 @@
             <ul class="nav-menu" id="navMenu">
                 <li><a href="#home" class="nav-link">HOME</a></li>
                 <li><a href="#experience" class="nav-link">EXPERIENCE</a></li>
-                <li><a href="#about" class="nav-link">ABOUT</a></li
+                <li><a href="#about" class="nav-link">ABOUT</a></li>
                 <li><a href="#contact" class="nav-link">CONTACT</a></li>
             </ul>
             <div class="nav-social">
@@ -72,7 +80,7 @@
                 </p>
             </div>
             <div class="bottom-logo">
-                <img src="wedding_logo.png" alt="Victory Vows Logo" class="logo-image">
+                <img src="assets/images/wedding_logo.png" alt="Victory Vows Logo" class="logo-image">
             </div>
         </div>
     </section>
@@ -87,14 +95,14 @@
                     We believe that every celebration holds unique stories waiting to be told. Our commitment lies in transforming your special day into cinematic masterpieces that stand the test of time. Through meticulous attention to detail and a deep understanding of visual storytelling, we create films that don't just document moments—they preserve emotions, relationships, and the very essence of your celebration.
                 </p>
                 <div class="experience-image-wrapper">
-                    <img src="wedding_image.jpg" alt="Wedding Celebration" class="experience-image">
+                    <img src="assets/images/wedding_image.jpg" alt="Wedding Celebration" class="experience-image">
                 </div>
                 <p class="experience-pricing">OUR 2026 PACKAGES START AT SGD$1,000</p>
                 <p class="experience-pricing-note">one of the lowest at current market price</p>
                 <p class="experience-description experience-description-bottom">
                     Each project we undertake is crafted with personalized care, ensuring your narrative unfolds in a way that feels distinctly yours. We work closely with you to understand your vision and story, creating films as unique as the love they celebrate.</p>
                 <a href="https://www.youtube.com/channel/UCCQvltNyPPytc4KiC9mbTyA" target="_blank" rel="noopener noreferrer" class="experience-youtube-link">
-                    <img src="youtube.png" alt="YouTube" class="experience-youtube-icon">
+                    <img src="assets/icons/youtube.png" alt="YouTube" class="experience-youtube-icon">
                     <span>Victory Vows (View our portfolio)</span>
                 </a>
                 <p class="experience-location-note">
@@ -110,7 +118,7 @@
             <h2 class="section-title">About</h2>
             <div class="about-profile">
                 <div class="about-image-wrapper">
-                    <img src="me.png" alt="Team Member" class="about-image">
+                    <img src="assets/images/me.png" alt="Team Member" class="about-image">
                 </div>
                 <div class="about-content">
                     <h2 class="about-name">VICTOR VARIAN</h2>
@@ -118,11 +126,11 @@
                     <p class="about-description">
                         Victor began as a passionate <a href="https://www.youtube.com/@victor.varian" target="_blank" rel="noopener noreferrer" class="about-link">content creator</a> over two years ago and later fell in love with capturing the beautiful moments shared between couples and telling their love stories. His passion for visual storytelling drives his commitment to crafting timeless heirlooms for every couple he films.                    </p>
                     <a href="https://www.instagram.com/victor.varian/" target="_blank" rel="noopener noreferrer" class="about-instagram-link">
-                        <img src="Instagram.svg" alt="Instagram" class="about-instagram-icon">
+                        <img src="assets/icons/Instagram.svg" alt="Instagram" class="about-instagram-icon">
                         <span>@victor.varian</span>
                     </a>
                     <a href="https://www.youtube.com/@victor.varian" target="_blank" rel="noopener noreferrer" class="about-youtube-link">
-                        <img src="youtube.png" alt="YouTube" class="about-youtube-icon">
+                        <img src="assets/icons/youtube.png" alt="YouTube" class="about-youtube-icon">
                         <span>@victor.varian</span>
                     </a>
                 </div>
@@ -192,9 +200,31 @@
         </div>
     </section>
 
+    <!-- Wedding Website Studio Popup -->
+    <div class="studio-popup-overlay" id="studioPopup" hidden>
+        <div class="studio-popup" role="dialog" aria-modal="true" aria-labelledby="studioPopupTitle">
+            <button class="studio-popup-close" id="studioPopupClose" aria-label="Close">&times;</button>
+            <p class="studio-popup-eyebrow">New &mdash; Wedding Website Studio</p>
+            <h3 class="studio-popup-title" id="studioPopupTitle">Try Our Wedding<br>Website Generator</h3>
+            <p class="studio-popup-text">
+                Design your own digital wedding invitation &mdash; explore sample websites,
+                mix &amp; match your favourite sections, and preview your wedding website
+                in minutes. Free, no sign-up needed.
+            </p>
+            <div class="studio-popup-actions">
+                <a href="generator.html" class="studio-popup-btn" id="studioPopupCta">Explore The Studio</a>
+                <button class="studio-popup-later" id="studioPopupLater">Maybe later</button>
+            </div>
+        </div>
+    </div>
+
     <!-- EmailJS SDK -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <script src="script.js"></script>
+    <script src="mascot.js"
+            data-message="Hello! Try our wedding website generator — it's free!"
+            data-link="generator.html"
+            data-position="right"></script>
 </body>
 </html>
 

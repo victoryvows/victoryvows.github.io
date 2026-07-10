@@ -1,0 +1,11 @@
+{
+  "name": "victoryvows-site",
+  "private": true,
+  "description": "Victory Vows — wedding films & wedding website studio (static site). Run `npm test` before pushing.",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "devDependencies": {
+    "jsqr": "^1.4.0"
+  }
+}

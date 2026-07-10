@@ -1,6 +1,6 @@
 @font-face {
     font-family: 'Hatton';
-    src: url('hatton_font.otf') format('opentype');
+    src: url('assets/fonts/hatton_font.otf') format('opentype');
     font-weight: normal;
     font-style: normal;
 }
@@ -84,7 +84,7 @@ a, button {
     position: relative;
     width: 25px;
     height: 25px;
-    background: url('burger.svg') center/contain no-repeat;
+    background: url('assets/icons/burger.svg') center/contain no-repeat;
     filter: brightness(0) invert(1);
     transition: all 0.3s ease;
 }
@@ -94,9 +94,9 @@ a, button {
     display: none;
 }
 
-/* Use cross.svg when active */
+/* Use assets/icons/cross.svg when active */
 .hamburger.active .hamburger-icon {
-    background: url('cross.svg') center/contain no-repeat;
+    background: url('assets/icons/cross.svg') center/contain no-repeat;
     filter: brightness(0) invert(1);
 }
 
@@ -239,7 +239,7 @@ a, button {
     left: 0;
     right: 0;
     bottom: 0;
-    background: url('background.jpg') center center / cover no-repeat;
+    background: url('assets/images/background.jpg') center center / cover no-repeat;
     z-index: -2;
     animation: subtleZoom 20s ease-in-out infinite;
     transform: scale(1.1);
@@ -1253,3 +1253,138 @@ html {
     }
 }
 
+/* Wedding Website Studio — announcement popup */
+.studio-popup-overlay[hidden] {
+    display: none;
+}
+
+.studio-popup-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    background: rgba(5, 5, 5, 0.65);
+    backdrop-filter: blur(6px);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.studio-popup-overlay.show {
+    opacity: 1;
+}
+
+.studio-popup {
+    position: relative;
+    width: 100%;
+    max-width: 480px;
+    background: linear-gradient(165deg, #151515 0%, #1b1710 100%);
+    border: 1px solid rgba(201, 168, 106, 0.45);
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.65);
+    padding: 3.2rem 2.6rem 2.8rem;
+    text-align: center;
+    transform: translateY(26px) scale(0.97);
+    transition: transform 0.45s ease;
+}
+
+.studio-popup-overlay.show .studio-popup {
+    transform: translateY(0) scale(1);
+}
+
+.studio-popup-close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.45);
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.studio-popup-close:hover {
+    color: #c9a86a;
+    transform: rotate(90deg);
+}
+
+.studio-popup-eyebrow {
+    font-size: 0.68rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: #c9a86a;
+    margin-bottom: 1.3rem;
+}
+
+.studio-popup-title {
+    font-family: 'Hatton', 'Playfair Display', serif;
+    font-weight: 400;
+    font-size: clamp(1.5rem, 4.5vw, 2.1rem);
+    letter-spacing: 0.04em;
+    line-height: 1.35;
+    color: #ffffff;
+    margin-bottom: 1.3rem;
+}
+
+.studio-popup-text {
+    color: rgba(255, 255, 255, 0.65);
+    font-weight: 300;
+    font-size: 0.88rem;
+    line-height: 1.85;
+    margin-bottom: 2.1rem;
+}
+
+.studio-popup-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.1rem;
+}
+
+.studio-popup-btn {
+    display: inline-block;
+    padding: 0.95rem 2.6rem;
+    border: 1px solid #c9a86a;
+    color: #c9a86a;
+    font-size: 0.76rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all 0.35s ease;
+}
+
+.studio-popup-btn:hover {
+    background: #c9a86a;
+    color: #0a0a0a;
+}
+
+.studio-popup-later {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.45);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.74rem;
+    letter-spacing: 0.06em;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.studio-popup-later:hover {
+    color: #ffffff;
+}
+
+@media (max-width: 480px) {
+    .studio-popup {
+        padding: 2.6rem 1.6rem 2.2rem;
+    }
+}

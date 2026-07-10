@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wedding Website Studio - Victory Vows</title>
+    <meta name="description" content="Design your digital wedding invitation free — mix &amp; match sections across nine themes, personalize every word, and share a live preview.">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Victory Vows">
+    <meta property="og:title" content="Design Your Wedding Website — Victory Vows Studio">
+    <meta property="og:description" content="Mix &amp; match sections across nine themes, personalize every word, and preview your digital wedding invitation — free, no sign-up.">
+    <meta property="og:image" content="https://victoryvows.github.io/assets/images/wedding_image.jpg">
+    <meta property="og:url" content="https://victoryvows.github.io/generator.html">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" type="image/png" href="assets/images/wedding_logo_black.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Montserrat:wght@300;400;500;600&family=Dancing+Script:wght@400;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="generator.css">
+    <link rel="prefetch" href="assets/images/landing-bg-pic-1.jpg">
+    <link rel="prefetch" href="assets/images/landing-bg-pic-2.jpg">
+    <link rel="prefetch" href="assets/images/bg-pic.jpg">
+    <link rel="prefetch" href="assets/images/pic-potrait-couple-1.jpg">
+</head>
+<body class="studio-body">
+
+    <nav class="studio-nav">
+        <a class="topbar-brand" href="index.html">
+            <img src="assets/images/wedding_logo.png" alt="Victory Vows Logo">
+            <span class="brand-name">Victory Vows</span>
+            <span class="brand-sub">Wedding Website Studio</span>
+        </a>
+        <a class="topbar-link" href="index.html">&larr; Back to main site</a>
+    </nav>
+
+    <header class="studio-hero">
+        <p class="hero-eyebrow">Free Preview &middot; No Sign-Up</p>
+        <h1>Design Your Wedding Website</h1>
+        <p class="hero-sub">
+            Explore complete sample websites, mix &amp; match your favourite sections,
+            make every word your own, and generate a shareable preview of your
+            digital wedding invitation.
+        </p>
+        <div class="studio-steps">
+            <div class="studio-step">
+                <span class="step-num">1</span>
+                <span class="step-label">Explore samples</span>
+            </div>
+            <div class="studio-step">
+                <span class="step-num">2</span>
+                <span class="step-label">Mix &amp; match sections</span>
+            </div>
+            <div class="studio-step">
+                <span class="step-num">3</span>
+                <span class="step-label">Personalize your text</span>
+            </div>
+            <div class="studio-step">
+                <span class="step-num">4</span>
+                <span class="step-label">Preview your website</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="studio-main">
+        <div class="studio-panels">
+            <div class="tabs" role="tablist">
+                <button class="tab-btn active" data-tab="samples">Sample Websites</button>
+                <button class="tab-btn" data-tab="library">Section Library</button>
+                <button class="tab-btn" data-tab="personalize">Personalize</button>
+            </div>
+
+            <section class="tab-panel active" id="panelSamples">
+                <p class="panel-hint">
+                    Each sample is a complete wedding website. Open one to walk through it and
+                    pick the sections you love &mdash; or use the entire design as your starting point.
+                    Once you personalize your names, every sample is shown with them.
+                </p>
+                <div class="samples-grid" id="samplesGrid"></div>
+            </section>
+
+            <section class="tab-panel" id="panelLibrary">
+                <p class="panel-hint">
+                    Every section belongs to one category: a website always has <strong>1 landing page</strong>,
+                    <strong>up to 7 mix &amp; match sections</strong>, and <strong>1 outro page</strong>.
+                    Some designs here are studio exclusives you won't find in any sample.
+                </p>
+                <div class="filter-row" id="filterRow">
+                    <span class="filter-label">Category</span>
+                    <button class="filter-chip active" data-cat="all">All Sections</button>
+                    <button class="filter-chip" data-cat="landing">Landing Page</button>
+                    <button class="filter-chip" data-cat="content">Mix &amp; Match</button>
+                    <button class="filter-chip" data-cat="outro">Outro Page</button>
+                    <select class="kind-select" id="kindSelect" aria-label="Filter by section type"></select>
+                </div>
+                <div class="filter-row" id="themeRow">
+                    <span class="filter-label">Theme</span>
+                </div>
+                <div class="lib-grid" id="libGrid"></div>
+            </section>
+
+            <section class="tab-panel" id="panelPersonalize">
+                <p class="panel-hint">
+                    Make it yours &mdash; your photos, music, colours, and every word your guests
+                    will read. Leave any field blank to keep the sample text. Changes save
+                    automatically and flow into every sample, section and preview.
+                </p>
+                <div id="mediaStudio"></div>
+                <div class="pz-bar">
+                    <span class="pz-status" id="pzStatus">All changes saved</span>
+                    <button class="link-btn" id="pzReset">Reset to sample text</button>
+                </div>
+                <form id="pzForm" autocomplete="off"></form>
+                <p class="pz-note">
+                    Personalization is stored in this browser only. Publishing a preview takes a
+                    snapshot, so later edits never change links you have already shared.
+                </p>
+            </section>
+        </div>
+
+        <aside class="builder" id="builder">
+            <div class="builder-head">
+                <h2>Your Website</h2>
+                <button class="link-btn" id="clearDraft">Clear all</button>
+            </div>
+
+            <div class="slot-group">
+                <p class="slot-label">Landing Page <span class="req">Required</span></p>
+                <div id="slotLanding"></div>
+            </div>
+
+            <div class="slot-group">
+                <p class="slot-label">Mix &amp; Match Sections <span class="count" id="secCount">0 / 7</span></p>
+                <ul class="slot-list" id="slotSections"></ul>
+                <div id="slotSectionsEmpty"></div>
+            </div>
+
+            <div class="slot-group">
+                <p class="slot-label">Outro Page <span class="req">Required</span></p>
+                <div id="slotOutro"></div>
+            </div>
+
+            <div class="builder-tools">
+                <button class="ui-btn ui-btn-ghost ui-btn-sm tool-btn" id="shuffleBtn">🎲 Surprise Me</button>
+                <button class="ui-btn ui-btn-ghost ui-btn-sm tool-btn" id="goPersonalize">✎ Personalize Names &amp; Text</button>
+            </div>
+
+            <button class="ui-btn ui-btn-primary" id="previewBtn">Preview My Website</button>
+            <p class="builder-note">
+                Previewing generates a unique link with its own ID.<br>
+                Previews are stored in this browser for 7 days.
+            </p>
+        </aside>
+    </main>
+
+    <a class="builder-fab" href="#builder" id="builderFab">Your Website (0)</a>
+
+    <script src="templates.js"></script>
+    <script src="generator.js"></script>
+    <script src="mascot.js"
+            data-message="Beyond wedding films, we craft wedding websites too — mix, match, and make every word yours!"
+            data-position="left"></script>
+</body>
+</html>

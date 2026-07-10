@@ -144,8 +144,8 @@ window.addEventListener('scroll', () => {
 document.addEventListener('mousemove', (e) => {
     const heroContent = document.querySelector('.hero-content');
     if (heroContent && window.pageYOffset < window.innerHeight) {
-        const x = (e.clientX / window.innerWidth - 0.5) * 20;
-        const y = (e.clientY / window.innerHeight - 0.5) * 20;
+        const x = (e.clientX / window.innerWidth - 0.5) * 5;
+        const y = (e.clientY / window.innerHeight - 0.5) * 5;
         heroContent.style.transform = `translate(${x}px, ${y}px)`;
     }
 });
@@ -192,6 +192,70 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('Autoplay blocked. Click the audio button to play music.');
     });
 });
+
+// Wedding Website Studio announcement popup
+const studioPopup = document.getElementById('studioPopup');
+
+if (studioPopup) {
+    const SNOOZE_KEY = 'vv_studio_popup_snooze';
+    const SNOOZE_MS = 7 * 24 * 60 * 60 * 1000; // don't re-show for 7 days after dismissal
+
+    const readSnooze = () => {
+        try {
+            return parseInt(localStorage.getItem(SNOOZE_KEY), 10) || 0;
+        } catch (e) {
+            return 0;
+        }
+    };
+
+    const snooze = () => {
+        try {
+            localStorage.setItem(SNOOZE_KEY, String(Date.now()));
+        } catch (e) {
+            // Private mode — popup will simply show again next visit
+        }
+    };
+
+    const dismissPopup = () => {
+        snooze();
+        studioPopup.classList.remove('show');
+        setTimeout(() => {
+            studioPopup.hidden = true;
+        }, 400);
+    };
+
+    // ?popup=1 forces the popup regardless of the snooze (handy for testing)
+    const forcePopup = new URLSearchParams(window.location.search).has('popup');
+
+    if (forcePopup || Date.now() - readSnooze() > SNOOZE_MS) {
+        // Give the hero a moment before announcing the studio
+        setTimeout(() => {
+            studioPopup.hidden = false;
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => studioPopup.classList.add('show'));
+            });
+        }, forcePopup ? 400 : 2200);
+
+        document.getElementById('studioPopupClose').addEventListener('click', dismissPopup);
+        document.getElementById('studioPopupLater').addEventListener('click', dismissPopup);
+
+        // Click on the dark backdrop (not the card) also dismisses
+        studioPopup.addEventListener('click', (e) => {
+            if (e.target === studioPopup) {
+                dismissPopup();
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !studioPopup.hidden) {
+                dismissPopup();
+            }
+        });
+
+        // Following the CTA counts as seen — don't re-show on return
+        document.getElementById('studioPopupCta').addEventListener('click', snooze);
+    }
+}
 
 // Contact form handling with EmailJS
 const contactForm = document.getElementById('contactForm');

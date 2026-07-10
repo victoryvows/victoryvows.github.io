@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex">
+    <title>Wedding Website Preview - Victory Vows Studio</title>
+    <meta name="description" content="You're invited — open to view the wedding invitation.">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Victory Vows">
+    <meta property="og:title" content="Wedding Invitation 💌">
+    <meta property="og:description" content="You're invited — open to view the wedding invitation.">
+    <meta property="og:image" content="https://victoryvows.github.io/assets/images/wedding_image.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" type="image/png" href="assets/images/wedding_logo_black.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Montserrat:wght@300;400;500;600&family=Dancing+Script:wght@400;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="generator.css">
+    <link rel="preload" as="image" href="assets/images/landing-bg-pic-1.jpg">
+    <link rel="prefetch" href="assets/images/landing-bg-pic-2.jpg">
+    <link rel="prefetch" href="assets/images/landing-bg-pic-4.jpg">
+    <link rel="prefetch" href="assets/images/bg-pic.jpg">
+</head>
+<body>
+
+    <main id="siteRoot"></main>
+
+    <div class="invite-gate" id="inviteGate" hidden>
+        <div class="gate-bg"></div>
+        <div class="gate-veil"></div>
+        <div class="gate-inner">
+            <p class="gate-eyebrow">The Wedding Of</p>
+            <h1 class="gate-names" id="gateNames"></h1>
+            <p class="gate-date" id="gateDate"></p>
+            <div class="gate-guest" id="gateGuest" hidden>
+                <span>Dear,</span>
+                <b id="gateGuestName"></b>
+                <em>We apologise if there is any misspelling of name or title</em>
+            </div>
+            <button class="gate-open" id="gateOpenBtn">Open<br>Invitation</button>
+        </div>
+    </div>
+
+    <button class="music-btn" id="musicBtn" hidden aria-label="Toggle background music"><span class="mb-ico">&#9835;</span></button>
+    <nav class="dot-nav" id="dotNav" hidden aria-label="Sections"></nav>
+    <audio id="bgm" src="assets/audio/photograph.mp3" loop preload="none"></audio>
+
+    <div class="preview-pill" id="previewPill" hidden>
+        <button class="pill-collapse" id="pillToggle" aria-label="Collapse preview menu">&#9662;</button>
+        <span class="pill-text" id="pillText">Temporary preview &middot; stored in this browser for 7 days</span>
+        <div class="pill-btns">
+            <button class="pill-btn" id="copyLinkBtn">Copy Link</button>
+            <button class="pill-btn" id="qrBtn">Download QR</button>
+            <button class="pill-btn" id="inviteGuestBtn">Invite a Guest</button>
+            <a class="pill-btn" href="generator.html" id="editBtn">Edit in Studio</a>
+            <button class="pill-btn gold" id="goLiveBtn">Make This Page Live</button>
+        </div>
+    </div>
+
+    <div class="vv-modal" id="liveModal" hidden>
+        <div class="vv-modal-backdrop" data-close></div>
+        <div class="vv-modal-card" role="dialog" aria-modal="true" aria-label="Make this website live">
+            <button class="vv-modal-x" data-close aria-label="Close">&times;</button>
+            <p class="vv-modal-eyebrow">Ready When You Are</p>
+            <h2 class="vv-modal-title">Make This Website Live</h2>
+            <p class="vv-modal-text">
+                Love what you've built? Email us your website details and we'll turn this
+                preview into a real, shareable wedding website for your guests &mdash;
+                photos, your own address, the works. Any additional customization inquiries are welcome.
+                We will tune the website until you are satisfied!
+            </p>
+            <ol class="vv-modal-steps">
+                <li>Tap <strong>Open Email Draft</strong> &mdash; it's pre-filled with everything below.</li>
+                <li>Add your whatsapp phone number or telegram handle so we can reach you, then send.</li>
+                <li>We rebuild your exact design from the website code or get in touch within 2 days.</li>
+            </ol>
+            <p class="code-label">Your website code <span>&mdash; this is your whole design in one string</span></p>
+            <textarea class="site-code" id="siteCode" readonly rows="4" spellcheck="false"></textarea>
+            <div class="attach-list" id="attachList" hidden>
+                <p class="code-label">Attach these files to the email <span>&mdash; photos &amp; music can't travel inside the code</span></p>
+                <ul id="attachItems"></ul>
+            </div>
+            <div class="vv-modal-actions">
+                <a class="ui-btn ui-btn-primary" id="emailUsBtn" href="#">Open Email Draft</a>
+                <button class="ui-btn ui-btn-ghost" id="copyDetailsBtn">Copy Details Instead</button>
+            </div>
+            <p class="vv-modal-note">
+                If your email app opens without the code, tap <em>Copy Details Instead</em> and paste
+                everything into a message to <strong>hello.victoryvows@gmail.com</strong>.
+                The full code is all we need to rebuild your website exactly.
+            </p>
+        </div>
+    </div>
+
+    <script src="templates.js"></script>
+    <script src="qr.js"></script>
+    <script src="preview.js"></script>
+</body>
+</html>
