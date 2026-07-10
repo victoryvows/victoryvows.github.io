@@ -191,6 +191,14 @@ window.VV = (function () {
         return s.trim().split(/\s+/)[0];
     }
 
+    // First visible glyph of an escaped string — a leading HTML entity
+    // (e.g. &amp;) or a surrogate pair (emoji) counts as one glyph, so
+    // drop caps and medallion initials never slice a character in half.
+    function firstGlyph(s) {
+        const m = String(s).match(/^(?:&[a-zA-Z]+;|&#\d+;|[\uD800-\uDBFF][\uDC00-\uDFFF]|[\s\S])/);
+        return m ? m[0] : '';
+    }
+
     function alnum(s) {
         return s.replace(/[^a-zA-Z0-9]/g, '');
     }
@@ -641,6 +649,69 @@ window.VV = (function () {
         { id: 'landing-frame-ivory', category: 'landing', kind: 'landing', theme: 'ivory', layout: 'frame', name: 'The Invitation Card', desc: 'A fine double frame, a monogram and formal lettering.' },
         { id: 'landing-frame-sage', category: 'landing', kind: 'landing', theme: 'sage', layout: 'frame', name: 'Pressed Card', desc: 'A botanical stationery frame in eucalyptus green.' },
         { id: 'landing-frame-villa', category: 'landing', kind: 'landing', theme: 'villa', layout: 'frame', name: 'Plaster Invitation', desc: 'A sun-washed stationery frame sealed in brick red.' },
+        { id: 'landing-inlay-noir', category: 'landing', kind: 'landing', theme: 'noir', layout: 'inlay', name: 'The Gilded Initials', desc: 'Champagne initials embracing your photograph.' },
+        { id: 'landing-inlay-blush', category: 'landing', kind: 'landing', theme: 'blush', layout: 'inlay', name: 'The Rose Initials', desc: 'Rosewater initials wrapped around your portrait.' },
+        { id: 'landing-inlay-azure', category: 'landing', kind: 'landing', theme: 'azure', layout: 'inlay', name: 'The Tide Initials', desc: 'Crisp initials holding a seaside portrait.' },
+        { id: 'landing-inlay-royal', category: 'landing', kind: 'landing', theme: 'royal', layout: 'inlay', name: 'The Sovereign Initials', desc: 'Gold initials flanking the royal portrait.', exclusive: true },
+        { id: 'landing-inlay-ivory', category: 'landing', kind: 'landing', theme: 'ivory', layout: 'inlay', name: 'The Engraved Initials', desc: 'Ink initials embracing a silver print.' },
+        { id: 'landing-inlay-terra', category: 'landing', kind: 'landing', theme: 'terra', layout: 'inlay', name: 'The Golden Initials', desc: 'Sunset initials around a golden-hour portrait.' },
+        { id: 'landing-inlay-sage', category: 'landing', kind: 'landing', theme: 'sage', layout: 'inlay', name: 'The Botanical Initials', desc: 'Leafy initials holding your portrait.' },
+        { id: 'landing-inlay-dusk', category: 'landing', kind: 'landing', theme: 'dusk', layout: 'inlay', name: 'The Twilight Initials', desc: 'Amber initials embracing a blue-hour portrait.' },
+        { id: 'landing-inlay-villa', category: 'landing', kind: 'landing', theme: 'villa', layout: 'inlay', name: 'The Courtyard Initials', desc: 'Brick-red initials around a courtyard portrait.' },
+        { id: 'landing-cover-noir', category: 'landing', kind: 'landing', theme: 'noir', layout: 'cover', name: 'The Midnight Cover', desc: 'A full-bleed editorial cover, names set low.' },
+        { id: 'landing-cover-blush', category: 'landing', kind: 'landing', theme: 'blush', layout: 'cover', name: 'The Rosewater Cover', desc: 'A soft magazine cover for your love story.' },
+        { id: 'landing-cover-azure', category: 'landing', kind: 'landing', theme: 'azure', layout: 'cover', name: 'The Coastal Cover', desc: 'A crisp editorial cover from the shore.' },
+        { id: 'landing-cover-royal', category: 'landing', kind: 'landing', theme: 'royal', layout: 'cover', name: 'The Court Cover', desc: 'A stately cover issue in emerald and gold.', exclusive: true },
+        { id: 'landing-cover-ivory', category: 'landing', kind: 'landing', theme: 'ivory', layout: 'cover', name: 'The Ivory Cover', desc: 'A quiet editorial cover in silver print.' },
+        { id: 'landing-cover-terra', category: 'landing', kind: 'landing', theme: 'terra', layout: 'cover', name: 'The Sundown Cover', desc: 'A golden-hour cover for the love issue.' },
+        { id: 'landing-cover-sage', category: 'landing', kind: 'landing', theme: 'sage', layout: 'cover', name: 'The Meadow Cover', desc: 'A garden-fresh cover for your story.' },
+        { id: 'landing-cover-dusk', category: 'landing', kind: 'landing', theme: 'dusk', layout: 'cover', name: 'The Blue Hour Cover', desc: 'An evening editorial cover, amber-lit.' },
+        { id: 'landing-cover-villa', category: 'landing', kind: 'landing', theme: 'villa', layout: 'cover', name: 'The Villa Cover', desc: 'A courtyard cover issue in warm light.' },
+        { id: 'landing-prem-noir', category: 'landing', kind: 'landing', theme: 'noir', layout: 'premiere', name: 'The Midnight Premiere', desc: 'A cinematic title card for opening night.' },
+        { id: 'landing-prem-blush', category: 'landing', kind: 'landing', theme: 'blush', layout: 'premiere', name: 'The Rose Premiere', desc: 'Your names in lights, gently blushing.' },
+        { id: 'landing-prem-azure', category: 'landing', kind: 'landing', theme: 'azure', layout: 'premiere', name: 'The Harbour Premiere', desc: 'A film-title opening, crisp as credits.' },
+        { id: 'landing-prem-royal', category: 'landing', kind: 'landing', theme: 'royal', layout: 'premiere', name: 'The Royal Premiere', desc: 'A gala title card in emerald and gold.', exclusive: true },
+        { id: 'landing-prem-ivory', category: 'landing', kind: 'landing', theme: 'ivory', layout: 'premiere', name: 'The Silver Screen', desc: 'A monochrome title card, quietly grand.' },
+        { id: 'landing-prem-terra', category: 'landing', kind: 'landing', theme: 'terra', layout: 'premiere', name: 'The Sunset Premiere', desc: 'A golden title card at magic hour.' },
+        { id: 'landing-prem-sage', category: 'landing', kind: 'landing', theme: 'sage', layout: 'premiere', name: 'The Garden Premiere', desc: 'An open-air premiere among the greens.' },
+        { id: 'landing-prem-dusk', category: 'landing', kind: 'landing', theme: 'dusk', layout: 'premiere', name: 'The Twilight Premiere', desc: 'A blue-hour title card, amber-lit.' },
+        { id: 'landing-prem-villa', category: 'landing', kind: 'landing', theme: 'villa', layout: 'premiere', name: 'The Courtyard Premiere', desc: 'A villa premiere under the evening sky.' },
+        { id: 'landing-veil-noir', category: 'landing', kind: 'landing', theme: 'noir', layout: 'veil', name: 'The Midnight Pane', desc: 'Names on frosted glass over a night photograph.' },
+        { id: 'landing-veil-blush', category: 'landing', kind: 'landing', theme: 'blush', layout: 'veil', name: 'The Rose Pane', desc: 'A frosted-glass invitation over soft petals.' },
+        { id: 'landing-veil-azure', category: 'landing', kind: 'landing', theme: 'azure', layout: 'veil', name: 'The Sea Glass', desc: 'Names etched on sea glass over the shore.' },
+        { id: 'landing-veil-royal', category: 'landing', kind: 'landing', theme: 'royal', layout: 'veil', name: 'The Royal Vitrine', desc: 'A gilded glass pane over the court portrait.', exclusive: true },
+        { id: 'landing-veil-ivory', category: 'landing', kind: 'landing', theme: 'ivory', layout: 'veil', name: 'The Frosted Pane', desc: 'A quiet glass card over a silver print.' },
+        { id: 'landing-veil-terra', category: 'landing', kind: 'landing', theme: 'terra', layout: 'veil', name: 'The Amber Pane', desc: 'Frosted glass warmed by golden light.' },
+        { id: 'landing-veil-sage', category: 'landing', kind: 'landing', theme: 'sage', layout: 'veil', name: 'The Greenhouse Pane', desc: 'Names on misted glass among the greens.' },
+        { id: 'landing-veil-dusk', category: 'landing', kind: 'landing', theme: 'dusk', layout: 'veil', name: 'The Twilight Pane', desc: 'Frosted glass lit by the blue hour.' },
+        { id: 'landing-veil-villa', category: 'landing', kind: 'landing', theme: 'villa', layout: 'veil', name: 'The Villa Pane', desc: 'A sunlit glass card on courtyard air.' },
+        { id: 'landing-gate-noir', category: 'landing', kind: 'landing', theme: 'noir', layout: 'gatefold', name: 'The Midnight Gatefold', desc: 'Your photograph parted by a sealed centre seam.' },
+        { id: 'landing-gate-blush', category: 'landing', kind: 'landing', theme: 'blush', layout: 'gatefold', name: 'The Rose Gatefold', desc: 'A gatefold cover sealed with your monogram.' },
+        { id: 'landing-gate-azure', category: 'landing', kind: 'landing', theme: 'azure', layout: 'gatefold', name: 'The Coastal Gatefold', desc: 'A seaside photograph, parted at the seal.' },
+        { id: 'landing-gate-royal', category: 'landing', kind: 'landing', theme: 'royal', layout: 'gatefold', name: 'The Royal Gatefold', desc: 'The court portrait behind gilded doors.', exclusive: true },
+        { id: 'landing-gate-ivory', category: 'landing', kind: 'landing', theme: 'ivory', layout: 'gatefold', name: 'The Ivory Gatefold', desc: 'A silver print parted by a quiet seam.' },
+        { id: 'landing-gate-terra', category: 'landing', kind: 'landing', theme: 'terra', layout: 'gatefold', name: 'The Sunset Gatefold', desc: 'Golden doors opening on your photograph.' },
+        { id: 'landing-gate-sage', category: 'landing', kind: 'landing', theme: 'sage', layout: 'gatefold', name: 'The Garden Gatefold', desc: 'A botanical gatefold sealed in green.' },
+        { id: 'landing-gate-dusk', category: 'landing', kind: 'landing', theme: 'dusk', layout: 'gatefold', name: 'The Twilight Gatefold', desc: 'Evening doors parted at an amber seal.' },
+        { id: 'landing-gate-villa', category: 'landing', kind: 'landing', theme: 'villa', layout: 'gatefold', name: 'The Villa Gatefold', desc: 'Courtyard doors sealed in brick red.' },
+        { id: 'landing-booth-noir', category: 'landing', kind: 'landing', theme: 'noir', layout: 'booth', name: 'The Midnight Photo Booth', desc: 'A booth strip pinned beside your names.' },
+        { id: 'landing-booth-blush', category: 'landing', kind: 'landing', theme: 'blush', layout: 'booth', name: 'The Rose Photo Booth', desc: 'A sweet booth strip taped in rosewater.' },
+        { id: 'landing-booth-azure', category: 'landing', kind: 'landing', theme: 'azure', layout: 'booth', name: 'The Seaside Photo Booth', desc: 'A crisp booth strip from the boardwalk.' },
+        { id: 'landing-booth-royal', category: 'landing', kind: 'landing', theme: 'royal', layout: 'booth', name: 'The Royal Photo Booth', desc: 'A gilded booth strip from the court.', exclusive: true },
+        { id: 'landing-booth-ivory', category: 'landing', kind: 'landing', theme: 'ivory', layout: 'booth', name: 'The Ivory Photo Booth', desc: 'A monochrome booth strip, quietly taped.' },
+        { id: 'landing-booth-terra', category: 'landing', kind: 'landing', theme: 'terra', layout: 'booth', name: 'The Golden Photo Booth', desc: 'A sun-warmed booth strip from the desert.' },
+        { id: 'landing-booth-sage', category: 'landing', kind: 'landing', theme: 'sage', layout: 'booth', name: 'The Garden Photo Booth', desc: 'A leafy booth strip taped with love.' },
+        { id: 'landing-booth-dusk', category: 'landing', kind: 'landing', theme: 'dusk', layout: 'booth', name: 'The Twilight Photo Booth', desc: 'An evening booth strip, amber-lit.' },
+        { id: 'landing-booth-villa', category: 'landing', kind: 'landing', theme: 'villa', layout: 'booth', name: 'The Courtyard Photo Booth', desc: 'A villa booth strip on warm plaster.' },
+        { id: 'landing-arcade-noir', category: 'landing', kind: 'landing', theme: 'noir', layout: 'arcade', name: 'The Midnight Arcade', desc: 'Names at the end of candlelit archways.' },
+        { id: 'landing-arcade-blush', category: 'landing', kind: 'landing', theme: 'blush', layout: 'arcade', name: 'The Rose Arcade', desc: 'Soft archways receding toward your names.' },
+        { id: 'landing-arcade-azure', category: 'landing', kind: 'landing', theme: 'azure', layout: 'arcade', name: 'The Harbour Arcade', desc: 'Crisp arches opening onto the sea air.' },
+        { id: 'landing-arcade-royal', category: 'landing', kind: 'landing', theme: 'royal', layout: 'arcade', name: 'The Royal Arcade', desc: 'Gilded archways leading to the court.', exclusive: true },
+        { id: 'landing-arcade-ivory', category: 'landing', kind: 'landing', theme: 'ivory', layout: 'arcade', name: 'The Ivory Arcade', desc: 'Quiet arches drawn in a single hairline.' },
+        { id: 'landing-arcade-terra', category: 'landing', kind: 'landing', theme: 'terra', layout: 'arcade', name: 'The Adobe Arcade', desc: 'Sunset archways deepening to gold.' },
+        { id: 'landing-arcade-sage', category: 'landing', kind: 'landing', theme: 'sage', layout: 'arcade', name: 'The Garden Arcade', desc: 'Green arches opening onto the meadow.' },
+        { id: 'landing-arcade-dusk', category: 'landing', kind: 'landing', theme: 'dusk', layout: 'arcade', name: 'The Twilight Arcade', desc: 'Amber archways into the blue hour.' },
+        { id: 'landing-arcade-villa', category: 'landing', kind: 'landing', theme: 'villa', layout: 'arcade', name: 'The Courtyard Arcade', desc: 'Villa arches receding into warm light.' },
 
         /* ---- Mix & match: couple ---- */
         { id: 'couple-noir', category: 'content', kind: 'couple', theme: 'noir', name: 'Gilded Duet', desc: 'Bride & groom introduction with gold-ringed monograms.' },
@@ -659,6 +730,24 @@ window.VV = (function () {
         { id: 'couple-panels-sage', category: 'content', kind: 'couple', theme: 'sage', layout: 'panels', name: 'Meadow Panels', desc: 'Fresh portrait panels wrapped in green.' },
         { id: 'couple-panels-dusk', category: 'content', kind: 'couple', theme: 'dusk', layout: 'panels', name: 'Lantern Panels', desc: 'Portrait panels glowing against the blue hour.' },
         { id: 'couple-panels-villa', category: 'content', kind: 'couple', theme: 'villa', layout: 'panels', name: 'Courtyard Panels', desc: 'Portraits against warm brick, names in plaster.' },
+        { id: 'couple-cameo-noir', category: 'content', kind: 'couple', theme: 'noir', layout: 'cameo', name: 'Midnight Lockets', desc: 'Oval keepsake portraits ringed in champagne gold.' },
+        { id: 'couple-cameo-blush', category: 'content', kind: 'couple', theme: 'blush', layout: 'cameo', name: 'Rosewater Cameos', desc: 'Soft oval portraits framed like antique lockets.' },
+        { id: 'couple-cameo-azure', category: 'content', kind: 'couple', theme: 'azure', layout: 'cameo', name: 'Seaside Cameos', desc: 'Crisp oval portraits in fine coastal frames.' },
+        { id: 'couple-cameo-royal', category: 'content', kind: 'couple', theme: 'royal', layout: 'cameo', name: 'The Royal Cameos', desc: 'Gilded oval miniatures, presented at court.', exclusive: true },
+        { id: 'couple-cameo-ivory', category: 'content', kind: 'couple', theme: 'ivory', layout: 'cameo', name: 'Porcelain Cameos', desc: 'Monochrome oval portraits, engraved beneath.' },
+        { id: 'couple-cameo-terra', category: 'content', kind: 'couple', theme: 'terra', layout: 'cameo', name: 'Sunset Cameos', desc: 'Warm oval portraits in hand-thrown clay tones.' },
+        { id: 'couple-cameo-sage', category: 'content', kind: 'couple', theme: 'sage', layout: 'cameo', name: 'Botanical Cameos', desc: 'Oval portraits wreathed in quiet greens.' },
+        { id: 'couple-cameo-dusk', category: 'content', kind: 'couple', theme: 'dusk', layout: 'cameo', name: 'Lantern Cameos', desc: 'Oval portraits glowing at the blue hour.' },
+        { id: 'couple-cameo-villa', category: 'content', kind: 'couple', theme: 'villa', layout: 'cameo', name: 'Courtyard Cameos', desc: 'Sunlit oval portraits on warm plaster.' },
+        { id: 'couple-duet-noir', category: 'content', kind: 'couple', theme: 'noir', layout: 'duet', name: 'The Midnight Duet', desc: 'Two names in towering serif behind one great ampersand.' },
+        { id: 'couple-duet-blush', category: 'content', kind: 'couple', theme: 'blush', layout: 'duet', name: 'The Rose Duet', desc: 'A typographic introduction washed in rosewater.' },
+        { id: 'couple-duet-azure', category: 'content', kind: 'couple', theme: 'azure', layout: 'duet', name: 'The Coastal Duet', desc: 'An editorial name-for-name introduction.' },
+        { id: 'couple-duet-royal', category: 'content', kind: 'couple', theme: 'royal', layout: 'duet', name: 'The Sovereign Duet', desc: 'Names in gold either side of a court ampersand.', exclusive: true },
+        { id: 'couple-duet-ivory', category: 'content', kind: 'couple', theme: 'ivory', layout: 'duet', name: 'The Ink Duet', desc: 'Pure typography: two names, one ampersand.' },
+        { id: 'couple-duet-terra', category: 'content', kind: 'couple', theme: 'terra', layout: 'duet', name: 'The Golden Duet', desc: 'Sun-warmed names around a great ampersand.' },
+        { id: 'couple-duet-sage', category: 'content', kind: 'couple', theme: 'sage', layout: 'duet', name: 'The Meadow Duet', desc: 'A fresh typographic pairing in green.' },
+        { id: 'couple-duet-dusk', category: 'content', kind: 'couple', theme: 'dusk', layout: 'duet', name: 'The Twilight Duet', desc: 'Amber names either side of the evening ampersand.' },
+        { id: 'couple-duet-villa', category: 'content', kind: 'couple', theme: 'villa', layout: 'duet', name: 'The Courtyard Duet', desc: 'Brick-red names on plaster, ampersand between.' },
 
         /* ---- Mix & match: story ---- */
         { id: 'story-noir', category: 'content', kind: 'story', theme: 'noir', name: 'Nocturne Timeline', desc: 'A candlelit timeline of the love story.' },
@@ -677,6 +766,24 @@ window.VV = (function () {
         { id: 'story-arch-terra', category: 'content', kind: 'story', theme: 'terra', layout: 'arch', photos: true, name: 'Desert Arches', desc: 'Milestone photographs framed in sunset arches.' },
         { id: 'story-arch-sage', category: 'content', kind: 'story', theme: 'sage', layout: 'arch', photos: true, name: 'Garden Arches', desc: 'Arched milestone photographs wreathed in green.' },
         { id: 'story-arch-villa', category: 'content', kind: 'story', theme: 'villa', layout: 'arch', photos: true, name: 'Courtyard Arches', desc: 'Milestones framed in warm villa archways.' },
+        { id: 'story-letters-noir', category: 'content', kind: 'story', theme: 'noir', layout: 'letters', name: 'Midnight Love Letters', desc: 'Milestones sealed in wax, written after dark.' },
+        { id: 'story-letters-blush', category: 'content', kind: 'story', theme: 'blush', layout: 'letters', name: 'Rosewater Letters', desc: 'Love letters with blush wax seals, year by year.' },
+        { id: 'story-letters-azure', category: 'content', kind: 'story', theme: 'azure', layout: 'letters', name: 'Letters From The Coast', desc: 'Crisp keepsake letters, sealed and dated.' },
+        { id: 'story-letters-royal', category: 'content', kind: 'story', theme: 'royal', layout: 'letters', name: 'The Royal Letters', desc: 'Gilded letters sealed with the sovereign wax.', exclusive: true },
+        { id: 'story-letters-ivory', category: 'content', kind: 'story', theme: 'ivory', layout: 'letters', name: 'The Ivory Letters', desc: 'Quiet letters, each chapter under a wax seal.' },
+        { id: 'story-letters-terra', category: 'content', kind: 'story', theme: 'terra', layout: 'letters', name: 'Desert Dispatches', desc: 'Sun-baked letters sealed in terracotta wax.' },
+        { id: 'story-letters-sage', category: 'content', kind: 'story', theme: 'sage', layout: 'letters', name: 'Pressed Letters', desc: 'Botanical letters sealed in eucalyptus wax.' },
+        { id: 'story-letters-dusk', category: 'content', kind: 'story', theme: 'dusk', layout: 'letters', name: 'Letters By Lanternlight', desc: 'Evening letters sealed in amber wax.' },
+        { id: 'story-letters-villa', category: 'content', kind: 'story', theme: 'villa', layout: 'letters', name: 'The Amara Letters', desc: 'Letters from the courtyard, sealed in brick red.' },
+        { id: 'story-gazette-noir', category: 'content', kind: 'story', theme: 'noir', layout: 'gazette', name: 'The Midnight Gazette', desc: 'Your story on the front page, printed after dark.' },
+        { id: 'story-gazette-blush', category: 'content', kind: 'story', theme: 'blush', layout: 'gazette', name: 'The Rose Gazette', desc: 'A love story pressed in rosewater newsprint.' },
+        { id: 'story-gazette-azure', category: 'content', kind: 'story', theme: 'azure', layout: 'gazette', name: 'The Coastal Gazette', desc: 'Front-page columns, crisp as the morning paper.' },
+        { id: 'story-gazette-royal', category: 'content', kind: 'story', theme: 'royal', layout: 'gazette', name: 'The Court Circular', desc: 'A royal announcement in columned gold.', exclusive: true },
+        { id: 'story-gazette-ivory', category: 'content', kind: 'story', theme: 'ivory', layout: 'gazette', name: 'The Sunday Edition', desc: 'Your chapters set in quiet broadsheet columns.' },
+        { id: 'story-gazette-terra', category: 'content', kind: 'story', theme: 'terra', layout: 'gazette', name: 'The Sundown Gazette', desc: 'Golden-hour headlines of a love story.' },
+        { id: 'story-gazette-sage', category: 'content', kind: 'story', theme: 'sage', layout: 'gazette', name: 'The Meadow Gazette', desc: 'Garden-fresh columns of your milestones.' },
+        { id: 'story-gazette-dusk', category: 'content', kind: 'story', theme: 'dusk', layout: 'gazette', name: 'The Evening Edition', desc: 'A twilight broadsheet of your story.' },
+        { id: 'story-gazette-villa', category: 'content', kind: 'story', theme: 'villa', layout: 'gazette', name: 'The Villa Gazette', desc: 'Courtyard headlines pressed on warm plaster.' },
 
         /* ---- Mix & match: events ---- */
         { id: 'events-noir', category: 'content', kind: 'events', theme: 'noir', name: 'Evening Itinerary', desc: 'Black-tie ceremony & reception cards with maps.' },
@@ -695,6 +802,24 @@ window.VV = (function () {
         { id: 'events-rows-sage', category: 'content', kind: 'events', theme: 'sage', layout: 'rows', name: 'Meadow Programme', desc: 'A fresh ruled schedule in eucalyptus green.' },
         { id: 'events-rows-dusk', category: 'content', kind: 'events', theme: 'dusk', layout: 'rows', name: 'Blue Hour Programme', desc: 'An evening schedule ruled in amber.' },
         { id: 'events-rows-villa', category: 'content', kind: 'events', theme: 'villa', layout: 'rows', name: 'Villa Programme', desc: 'The day’s order, ruled on warm plaster.' },
+        { id: 'events-tickets-noir', category: 'content', kind: 'events', theme: 'noir', layout: 'tickets', name: 'Midnight Admissions', desc: 'Letterpress ticket stubs to an evening affair.' },
+        { id: 'events-tickets-blush', category: 'content', kind: 'events', theme: 'blush', layout: 'tickets', name: 'Rosewater Tickets', desc: 'Soft admission stubs to the celebrations.' },
+        { id: 'events-tickets-azure', category: 'content', kind: 'events', theme: 'azure', layout: 'tickets', name: 'Harbour Tickets', desc: 'Crisp perforated stubs for the wedding day.' },
+        { id: 'events-tickets-royal', category: 'content', kind: 'events', theme: 'royal', layout: 'tickets', name: 'Royal Admissions', desc: 'Gilded tickets to the court celebrations.', exclusive: true },
+        { id: 'events-tickets-ivory', category: 'content', kind: 'events', theme: 'ivory', layout: 'tickets', name: 'The Admission Stubs', desc: 'Fine letterpress tickets, quietly perforated.' },
+        { id: 'events-tickets-terra', category: 'content', kind: 'events', theme: 'terra', layout: 'tickets', name: 'Sunset Tickets', desc: 'Warm clay ticket stubs for a golden day.' },
+        { id: 'events-tickets-sage', category: 'content', kind: 'events', theme: 'sage', layout: 'tickets', name: 'Garden Tickets', desc: 'Leafy admission stubs to the festivities.' },
+        { id: 'events-tickets-dusk', category: 'content', kind: 'events', theme: 'dusk', layout: 'tickets', name: 'Twilight Tickets', desc: 'Amber-stamped stubs for the blue hour.' },
+        { id: 'events-tickets-villa', category: 'content', kind: 'events', theme: 'villa', layout: 'tickets', name: 'Courtyard Tickets', desc: 'Plaster-and-brick stubs to the courtyard.' },
+        { id: 'events-proc-noir', category: 'content', kind: 'events', theme: 'noir', layout: 'procession', name: 'The Midnight Procession', desc: 'The day unfolding down a gilded spine.' },
+        { id: 'events-proc-blush', category: 'content', kind: 'events', theme: 'blush', layout: 'procession', name: 'The Petal Procession', desc: 'Events flowing down a rose-lined path.' },
+        { id: 'events-proc-azure', category: 'content', kind: 'events', theme: 'azure', layout: 'procession', name: 'The Harbour Procession', desc: 'A clean centre-line order of the day.' },
+        { id: 'events-proc-royal', category: 'content', kind: 'events', theme: 'royal', layout: 'procession', name: 'The Royal Procession', desc: 'The court order, medallion by medallion.', exclusive: true },
+        { id: 'events-proc-ivory', category: 'content', kind: 'events', theme: 'ivory', layout: 'procession', name: 'The Quiet Procession', desc: 'The order of the day on a single fine line.' },
+        { id: 'events-proc-terra', category: 'content', kind: 'events', theme: 'terra', layout: 'procession', name: 'The Sundown Procession', desc: 'The day advancing along a golden spine.' },
+        { id: 'events-proc-sage', category: 'content', kind: 'events', theme: 'sage', layout: 'procession', name: 'The Garden Procession', desc: 'Ceremonies budding along a green stem.' },
+        { id: 'events-proc-dusk', category: 'content', kind: 'events', theme: 'dusk', layout: 'procession', name: 'The Lantern Procession', desc: 'Evening events lit stop by stop.' },
+        { id: 'events-proc-villa', category: 'content', kind: 'events', theme: 'villa', layout: 'procession', name: 'The Villa Procession', desc: 'The day parading through the courtyard.' },
 
         /* ---- Mix & match: gallery ---- */
         { id: 'gallery-noir', category: 'content', kind: 'gallery', theme: 'noir', name: 'Dark Room Gallery', desc: 'Moody seamless photo grid.' },
@@ -715,6 +840,24 @@ window.VV = (function () {
         { id: 'gallery-salon-sage', category: 'content', kind: 'gallery', theme: 'sage', layout: 'salon', name: 'Garden Salon', desc: 'A botanical salon wall in morning light.' },
         { id: 'gallery-salon-dusk', category: 'content', kind: 'gallery', theme: 'dusk', layout: 'salon', name: 'Twilight Salon', desc: 'A salon wall lit by amber lanterns.' },
         { id: 'gallery-salon-villa', category: 'content', kind: 'gallery', theme: 'villa', layout: 'salon', name: 'Villa Salon', desc: 'A courtyard salon wall on warm plaster.' },
+        { id: 'gallery-album-noir', category: 'content', kind: 'gallery', theme: 'noir', layout: 'album', name: 'Midnight Album', desc: 'A keepsake album page, corners and all.' },
+        { id: 'gallery-album-blush', category: 'content', kind: 'gallery', theme: 'blush', layout: 'album', name: 'Rosewater Album', desc: 'Photographs kept under blush photo corners.' },
+        { id: 'gallery-album-azure', category: 'content', kind: 'gallery', theme: 'azure', layout: 'album', name: 'Seaside Album', desc: 'A breezy album spread with photo corners.' },
+        { id: 'gallery-album-royal', category: 'content', kind: 'gallery', theme: 'royal', layout: 'album', name: 'The Royal Album', desc: 'Court photographs mounted in gold corners.', exclusive: true },
+        { id: 'gallery-album-ivory', category: 'content', kind: 'gallery', theme: 'ivory', layout: 'album', name: 'The Family Album', desc: 'A monochrome spread under quiet corners.' },
+        { id: 'gallery-album-terra', category: 'content', kind: 'gallery', theme: 'terra', layout: 'album', name: 'Adobe Album', desc: 'Sun-warmed pages from the family album.' },
+        { id: 'gallery-album-sage', category: 'content', kind: 'gallery', theme: 'sage', layout: 'album', name: 'Meadow Album', desc: 'A garden album pressed with green corners.' },
+        { id: 'gallery-album-dusk', category: 'content', kind: 'gallery', theme: 'dusk', layout: 'album', name: 'Twilight Album', desc: 'An evening album page, softly lit.' },
+        { id: 'gallery-album-villa', category: 'content', kind: 'gallery', theme: 'villa', layout: 'album', name: 'Courtyard Album', desc: 'A villa album spread on warm plaster.' },
+        { id: 'gallery-exhibit-noir', category: 'content', kind: 'gallery', theme: 'noir', layout: 'exhibit', name: 'The Noir Exhibition', desc: 'Photographs matted and hung after dark.' },
+        { id: 'gallery-exhibit-blush', category: 'content', kind: 'gallery', theme: 'blush', layout: 'exhibit', name: 'The Rose Exhibition', desc: 'A gallery hang in rosewater mats.' },
+        { id: 'gallery-exhibit-azure', category: 'content', kind: 'gallery', theme: 'azure', layout: 'exhibit', name: 'The Harbour Exhibition', desc: 'Photographs in crisp museum mats.' },
+        { id: 'gallery-exhibit-royal', category: 'content', kind: 'gallery', theme: 'royal', layout: 'exhibit', name: 'The Royal Exhibition', desc: 'A court exhibition with brass plaques.', exclusive: true },
+        { id: 'gallery-exhibit-ivory', category: 'content', kind: 'gallery', theme: 'ivory', layout: 'exhibit', name: 'The Retrospective', desc: 'A monochrome hang with engraved plaques.' },
+        { id: 'gallery-exhibit-terra', category: 'content', kind: 'gallery', theme: 'terra', layout: 'exhibit', name: 'The Adobe Exhibition', desc: 'Warm photographs matted in desert sand.' },
+        { id: 'gallery-exhibit-sage', category: 'content', kind: 'gallery', theme: 'sage', layout: 'exhibit', name: 'The Garden Exhibition', desc: 'A botanical hang in gallery mats.' },
+        { id: 'gallery-exhibit-dusk', category: 'content', kind: 'gallery', theme: 'dusk', layout: 'exhibit', name: 'The Twilight Exhibition', desc: 'An amber-lit museum hang.' },
+        { id: 'gallery-exhibit-villa', category: 'content', kind: 'gallery', theme: 'villa', layout: 'exhibit', name: 'The Villa Exhibition', desc: 'Courtyard photographs, matted and plaqued.' },
 
         /* ---- Mix & match: countdown ---- */
         { id: 'countdown-noir', category: 'content', kind: 'countdown', theme: 'noir', name: 'Midnight Countdown', desc: 'Live countdown in gilded frames.' },
@@ -733,6 +876,24 @@ window.VV = (function () {
         { id: 'countdown-inline-sage', category: 'content', kind: 'countdown', theme: 'sage', layout: 'inline', name: 'The Garden Date', desc: 'The date blooming large, counted gently down.' },
         { id: 'countdown-inline-dusk', category: 'content', kind: 'countdown', theme: 'dusk', layout: 'inline', name: 'The Twilight Date', desc: 'Amber numerals counting to the blue hour.' },
         { id: 'countdown-inline-villa', category: 'content', kind: 'countdown', theme: 'villa', layout: 'inline', name: 'The Villa Date', desc: 'The date in brick red, counting the afternoons.' },
+        { id: 'countdown-ring-noir', category: 'content', kind: 'countdown', theme: 'noir', layout: 'ring', name: 'The Midnight Orbit', desc: 'The days encircled in champagne gold.' },
+        { id: 'countdown-ring-blush', category: 'content', kind: 'countdown', theme: 'blush', layout: 'ring', name: 'The Rose Orbit', desc: 'Days to go, ringed in rosewater.' },
+        { id: 'countdown-ring-azure', category: 'content', kind: 'countdown', theme: 'azure', layout: 'ring', name: 'The Tide Orbit', desc: 'A clean ring counting the days down.' },
+        { id: 'countdown-ring-royal', category: 'content', kind: 'countdown', theme: 'royal', layout: 'ring', name: 'The Sovereign Orbit', desc: 'The count held in a gilded ring.', exclusive: true },
+        { id: 'countdown-ring-ivory', category: 'content', kind: 'countdown', theme: 'ivory', layout: 'ring', name: 'The Quiet Orbit', desc: 'A fine ring around the days that remain.' },
+        { id: 'countdown-ring-terra', category: 'content', kind: 'countdown', theme: 'terra', layout: 'ring', name: 'The Golden Orbit', desc: 'The days ringed in sunset clay.' },
+        { id: 'countdown-ring-sage', category: 'content', kind: 'countdown', theme: 'sage', layout: 'ring', name: 'The Meadow Orbit', desc: 'A leafy ring counting gently down.' },
+        { id: 'countdown-ring-dusk', category: 'content', kind: 'countdown', theme: 'dusk', layout: 'ring', name: 'The Amber Orbit', desc: 'The days aglow inside an evening ring.' },
+        { id: 'countdown-ring-villa', category: 'content', kind: 'countdown', theme: 'villa', layout: 'ring', name: 'The Villa Orbit', desc: 'The count ringed in brick on plaster.' },
+        { id: 'countdown-cal-noir', category: 'content', kind: 'countdown', theme: 'noir', layout: 'calendar', name: 'The Midnight Calendar', desc: 'The wedding month, one night circled.' },
+        { id: 'countdown-cal-blush', category: 'content', kind: 'countdown', theme: 'blush', layout: 'calendar', name: 'The Rose Calendar', desc: 'A calendar leaf with the day encircled.' },
+        { id: 'countdown-cal-azure', category: 'content', kind: 'countdown', theme: 'azure', layout: 'calendar', name: 'The Seaside Calendar', desc: 'A crisp month page, the date ringed.' },
+        { id: 'countdown-cal-royal', category: 'content', kind: 'countdown', theme: 'royal', layout: 'calendar', name: 'The Court Calendar', desc: 'The royal month with a gilded circle.', exclusive: true },
+        { id: 'countdown-cal-ivory', category: 'content', kind: 'countdown', theme: 'ivory', layout: 'calendar', name: 'The Engraved Calendar', desc: 'A quiet month leaf, one day marked.' },
+        { id: 'countdown-cal-terra', category: 'content', kind: 'countdown', theme: 'terra', layout: 'calendar', name: 'The Sundown Calendar', desc: 'A golden month with the day circled.' },
+        { id: 'countdown-cal-sage', category: 'content', kind: 'countdown', theme: 'sage', layout: 'calendar', name: 'The Garden Calendar', desc: 'A fresh month leaf, the date in bloom.' },
+        { id: 'countdown-cal-dusk', category: 'content', kind: 'countdown', theme: 'dusk', layout: 'calendar', name: 'The Twilight Calendar', desc: 'An evening month, one date alight.' },
+        { id: 'countdown-cal-villa', category: 'content', kind: 'countdown', theme: 'villa', layout: 'calendar', name: 'The Villa Calendar', desc: 'A plaster month page circled in brick.' },
 
         /* ---- Mix & match: rsvp ---- */
         { id: 'rsvp-noir', category: 'content', kind: 'rsvp', theme: 'noir', name: 'Velvet RSVP', desc: 'RSVP form and guest wishes, after dark.' },
@@ -751,6 +912,24 @@ window.VV = (function () {
         { id: 'rsvp-card-sage', category: 'content', kind: 'rsvp', theme: 'sage', layout: 'card', name: 'Garden Reply Card', desc: 'A botanical reply card with a wish wall.' },
         { id: 'rsvp-card-dusk', category: 'content', kind: 'rsvp', theme: 'dusk', layout: 'card', name: 'Lantern Reply Card', desc: 'An evening reply card ruled in amber.' },
         { id: 'rsvp-card-villa', category: 'content', kind: 'rsvp', theme: 'villa', layout: 'card', name: 'Courtyard Reply Card', desc: 'A plaster-white reply card sealed in brick.' },
+        { id: 'rsvp-env-noir', category: 'content', kind: 'rsvp', theme: 'noir', layout: 'envelope', name: 'The Midnight Envelope', desc: 'A reply sealed in champagne wax.' },
+        { id: 'rsvp-env-blush', category: 'content', kind: 'rsvp', theme: 'blush', layout: 'envelope', name: 'The Rosewater Envelope', desc: 'An envelope reply under a blush seal.' },
+        { id: 'rsvp-env-azure', category: 'content', kind: 'rsvp', theme: 'azure', layout: 'envelope', name: 'The Seaside Envelope', desc: 'A crisp reply envelope, sealed and sent.' },
+        { id: 'rsvp-env-royal', category: 'content', kind: 'rsvp', theme: 'royal', layout: 'envelope', name: 'The Royal Envelope', desc: 'A court reply beneath the sovereign seal.', exclusive: true },
+        { id: 'rsvp-env-ivory', category: 'content', kind: 'rsvp', theme: 'ivory', layout: 'envelope', name: 'The Ivory Envelope', desc: 'A quiet envelope sealed in porcelain wax.' },
+        { id: 'rsvp-env-terra', category: 'content', kind: 'rsvp', theme: 'terra', layout: 'envelope', name: 'The Clay Envelope', desc: 'A warm reply sealed in terracotta.' },
+        { id: 'rsvp-env-sage', category: 'content', kind: 'rsvp', theme: 'sage', layout: 'envelope', name: 'The Garden Envelope', desc: 'A botanical reply under a green seal.' },
+        { id: 'rsvp-env-dusk', category: 'content', kind: 'rsvp', theme: 'dusk', layout: 'envelope', name: 'The Lantern Envelope', desc: 'An evening reply sealed in amber.' },
+        { id: 'rsvp-env-villa', category: 'content', kind: 'rsvp', theme: 'villa', layout: 'envelope', name: 'The Courtyard Envelope', desc: 'A plaster envelope sealed in brick red.' },
+        { id: 'rsvp-gbook-noir', category: 'content', kind: 'rsvp', theme: 'noir', layout: 'guestbook', name: 'The Midnight Guest Book', desc: 'Sign your wishes on gilded ruled lines.' },
+        { id: 'rsvp-gbook-blush', category: 'content', kind: 'rsvp', theme: 'blush', layout: 'guestbook', name: 'The Rose Guest Book', desc: 'A soft ruled page awaiting your hand.' },
+        { id: 'rsvp-gbook-azure', category: 'content', kind: 'rsvp', theme: 'azure', layout: 'guestbook', name: 'The Harbour Guest Book', desc: 'A clean ruled page of guest wishes.' },
+        { id: 'rsvp-gbook-royal', category: 'content', kind: 'rsvp', theme: 'royal', layout: 'guestbook', name: 'The Royal Guest Book', desc: 'The court register, ruled in gold.', exclusive: true },
+        { id: 'rsvp-gbook-ivory', category: 'content', kind: 'rsvp', theme: 'ivory', layout: 'guestbook', name: 'The Guest Book', desc: 'An heirloom page of inked wishes.' },
+        { id: 'rsvp-gbook-terra', category: 'content', kind: 'rsvp', theme: 'terra', layout: 'guestbook', name: 'The Sundown Guest Book', desc: 'Warm ruled lines for your blessings.' },
+        { id: 'rsvp-gbook-sage', category: 'content', kind: 'rsvp', theme: 'sage', layout: 'guestbook', name: 'The Meadow Guest Book', desc: 'A leafy page for handwritten wishes.' },
+        { id: 'rsvp-gbook-dusk', category: 'content', kind: 'rsvp', theme: 'dusk', layout: 'guestbook', name: 'The Twilight Guest Book', desc: 'An amber-ruled page of evening wishes.' },
+        { id: 'rsvp-gbook-villa', category: 'content', kind: 'rsvp', theme: 'villa', layout: 'guestbook', name: 'The Villa Guest Book', desc: 'A courtyard register on warm plaster.' },
 
         /* ---- Mix & match: quote ---- */
         { id: 'quote-royal', category: 'content', kind: 'quote', theme: 'royal', name: 'Sovereign Verse', desc: 'A formal verse set in gold on emerald.' },
@@ -770,6 +949,24 @@ window.VV = (function () {
         { id: 'quote-photo-sage', category: 'content', kind: 'quote', theme: 'sage', layout: 'photo', name: 'Verse In The Meadow', desc: 'A verse over a photograph veiled in green.' },
         { id: 'quote-photo-dusk', category: 'content', kind: 'quote', theme: 'dusk', layout: 'photo', name: 'Verse In The Blue Hour', desc: 'A verse over a twilight photograph.' },
         { id: 'quote-photo-villa', category: 'content', kind: 'quote', theme: 'villa', layout: 'photo', name: 'Verse On Plaster', desc: 'A verse over a photograph, warm as the courtyard.' },
+        { id: 'quote-dropcap-noir', category: 'content', kind: 'quote', theme: 'noir', layout: 'dropcap', name: 'The Midnight Manuscript', desc: 'Your verse illuminated after dark.' },
+        { id: 'quote-dropcap-blush', category: 'content', kind: 'quote', theme: 'blush', layout: 'dropcap', name: 'The Rose Manuscript', desc: 'An illuminated verse in rosewater.' },
+        { id: 'quote-dropcap-azure', category: 'content', kind: 'quote', theme: 'azure', layout: 'dropcap', name: 'The Coastal Manuscript', desc: 'A crisp page opened by one great initial.' },
+        { id: 'quote-dropcap-royal', category: 'content', kind: 'quote', theme: 'royal', layout: 'dropcap', name: 'The Illuminated Verse', desc: 'A gilded drop cap opens your verse.', exclusive: true },
+        { id: 'quote-dropcap-ivory', category: 'content', kind: 'quote', theme: 'ivory', layout: 'dropcap', name: 'The First Letter', desc: 'A quiet page opened by one great letter.' },
+        { id: 'quote-dropcap-terra', category: 'content', kind: 'quote', theme: 'terra', layout: 'dropcap', name: 'The Golden Manuscript', desc: 'A sun-warmed page, initial aglow.' },
+        { id: 'quote-dropcap-sage', category: 'content', kind: 'quote', theme: 'sage', layout: 'dropcap', name: 'The Garden Manuscript', desc: 'A botanical page with a leafy initial.' },
+        { id: 'quote-dropcap-dusk', category: 'content', kind: 'quote', theme: 'dusk', layout: 'dropcap', name: 'The Twilight Manuscript', desc: 'An evening page, one amber initial.' },
+        { id: 'quote-dropcap-villa', category: 'content', kind: 'quote', theme: 'villa', layout: 'dropcap', name: 'The Villa Manuscript', desc: 'A plaster page opened in brick red.' },
+        { id: 'quote-poster-noir', category: 'content', kind: 'quote', theme: 'noir', layout: 'poster', name: 'Words After Midnight', desc: 'Your verse set like a gallery poster.' },
+        { id: 'quote-poster-blush', category: 'content', kind: 'quote', theme: 'blush', layout: 'poster', name: 'Words In Rosewater', desc: 'An oversized verse, softly blushing.' },
+        { id: 'quote-poster-azure', category: 'content', kind: 'quote', theme: 'azure', layout: 'poster', name: 'Words On The Tide', desc: 'A poster-scale verse, clean as sea air.' },
+        { id: 'quote-poster-royal', category: 'content', kind: 'quote', theme: 'royal', layout: 'poster', name: 'Proclamation In Gold', desc: 'Your verse proclaimed at poster scale.', exclusive: true },
+        { id: 'quote-poster-ivory', category: 'content', kind: 'quote', theme: 'ivory', layout: 'poster', name: 'The Ivory Poster', desc: 'An editorial verse in vast quiet type.' },
+        { id: 'quote-poster-terra', category: 'content', kind: 'quote', theme: 'terra', layout: 'poster', name: 'Words At Sundown', desc: 'A poster verse washed in golden light.' },
+        { id: 'quote-poster-sage', category: 'content', kind: 'quote', theme: 'sage', layout: 'poster', name: 'Words In The Meadow', desc: 'An oversized verse among the greens.' },
+        { id: 'quote-poster-dusk', category: 'content', kind: 'quote', theme: 'dusk', layout: 'poster', name: 'Words At Blue Hour', desc: 'A twilight verse at poster scale.' },
+        { id: 'quote-poster-villa', category: 'content', kind: 'quote', theme: 'villa', layout: 'poster', name: 'Words On Plaster', desc: 'A courtyard verse writ large in brick.' },
 
         /* ---- Mix & match: gift ---- */
         { id: 'gift-royal', category: 'content', kind: 'gift', theme: 'royal', name: 'Royal Registry', desc: 'Digital gift envelopes with copyable accounts.' },
@@ -790,6 +987,24 @@ window.VV = (function () {
         { id: 'gift-ledger-sage', category: 'content', kind: 'gift', theme: 'sage', layout: 'ledger', name: 'Meadow Ledger', desc: 'A botanical registry ledger with fine rules.' },
         { id: 'gift-ledger-dusk', category: 'content', kind: 'gift', theme: 'dusk', layout: 'ledger', name: 'Twilight Ledger', desc: 'An evening registry ledger ruled in amber.' },
         { id: 'gift-ledger-villa', category: 'content', kind: 'gift', theme: 'villa', layout: 'ledger', name: 'Villa Ledger', desc: 'A courtyard registry ledger on warm plaster.' },
+        { id: 'gift-parcel-noir', category: 'content', kind: 'gift', theme: 'noir', layout: 'parcel', name: 'Midnight Parcels', desc: 'Gift boxes ribboned in champagne gold.' },
+        { id: 'gift-parcel-blush', category: 'content', kind: 'gift', theme: 'blush', layout: 'parcel', name: 'Rosewater Parcels', desc: 'Soft gift boxes tied with blush ribbon.' },
+        { id: 'gift-parcel-azure', category: 'content', kind: 'gift', theme: 'azure', layout: 'parcel', name: 'Seaside Parcels', desc: 'Crisp parcels tied in coastal ribbon.' },
+        { id: 'gift-parcel-royal', category: 'content', kind: 'gift', theme: 'royal', layout: 'parcel', name: 'The Royal Parcels', desc: 'Court gifts wrapped and ribboned in gold.', exclusive: true },
+        { id: 'gift-parcel-ivory', category: 'content', kind: 'gift', theme: 'ivory', layout: 'parcel', name: 'The Quiet Parcels', desc: 'Minimal parcels tied with fine ribbon.' },
+        { id: 'gift-parcel-terra', category: 'content', kind: 'gift', theme: 'terra', layout: 'parcel', name: 'Clay Parcels', desc: 'Warm parcels tied in terracotta ribbon.' },
+        { id: 'gift-parcel-sage', category: 'content', kind: 'gift', theme: 'sage', layout: 'parcel', name: 'Garden Parcels', desc: 'Botanical parcels tied with green ribbon.' },
+        { id: 'gift-parcel-dusk', category: 'content', kind: 'gift', theme: 'dusk', layout: 'parcel', name: 'Lantern Parcels', desc: 'Evening parcels ribboned in amber.' },
+        { id: 'gift-parcel-villa', category: 'content', kind: 'gift', theme: 'villa', layout: 'parcel', name: 'Courtyard Parcels', desc: 'Plaster parcels tied in brick-red ribbon.' },
+        { id: 'gift-tags-noir', category: 'content', kind: 'gift', theme: 'noir', layout: 'tags', name: 'Midnight Gift Tags', desc: 'Envelope details strung on a gilded line.' },
+        { id: 'gift-tags-blush', category: 'content', kind: 'gift', theme: 'blush', layout: 'tags', name: 'Rose Gift Tags', desc: 'Blush tags swaying on a ribbon line.' },
+        { id: 'gift-tags-azure', category: 'content', kind: 'gift', theme: 'azure', layout: 'tags', name: 'Harbour Gift Tags', desc: 'Crisp tags strung along a coastal line.' },
+        { id: 'gift-tags-royal', category: 'content', kind: 'gift', theme: 'royal', layout: 'tags', name: 'The Royal Tags', desc: 'Gilded tags hung on the court line.', exclusive: true },
+        { id: 'gift-tags-ivory', category: 'content', kind: 'gift', theme: 'ivory', layout: 'tags', name: 'The Ivory Tags', desc: 'Quiet keepsake tags on a fine string.' },
+        { id: 'gift-tags-terra', category: 'content', kind: 'gift', theme: 'terra', layout: 'tags', name: 'Sunset Gift Tags', desc: 'Clay tags strung in the golden hour.' },
+        { id: 'gift-tags-sage', category: 'content', kind: 'gift', theme: 'sage', layout: 'tags', name: 'Meadow Gift Tags', desc: 'Leafy tags on a garden twine.' },
+        { id: 'gift-tags-dusk', category: 'content', kind: 'gift', theme: 'dusk', layout: 'tags', name: 'Twilight Gift Tags', desc: 'Amber tags strung through the evening.' },
+        { id: 'gift-tags-villa', category: 'content', kind: 'gift', theme: 'villa', layout: 'tags', name: 'Villa Gift Tags', desc: 'Brick-red tags on a courtyard line.' },
 
         /* ---- Mix & match: attire (dress code) ---- */
         { id: 'attire-noir', category: 'content', kind: 'attire', theme: 'noir', name: 'Black Tie Board', desc: 'Dress code card with a suggested colour palette.' },
@@ -810,6 +1025,24 @@ window.VV = (function () {
         { id: 'attire-runway-sage', category: 'content', kind: 'attire', theme: 'sage', layout: 'runway', name: 'Sage Runway', desc: 'Leafy swatch bars beneath the garden dress code.' },
         { id: 'attire-runway-dusk', category: 'content', kind: 'attire', theme: 'dusk', layout: 'runway', name: 'Dusk Runway', desc: 'Twilight swatch bars glowing under amber type.' },
         { id: 'attire-runway-villa', category: 'content', kind: 'attire', theme: 'villa', layout: 'runway', name: 'Courtyard Runway', desc: 'Plaster-and-brick swatch bars, sunlit.' },
+        { id: 'attire-fan-noir', category: 'content', kind: 'attire', theme: 'noir', layout: 'fan', name: 'The Midnight Fan', desc: 'The dress palette fanned like swatch cards.' },
+        { id: 'attire-fan-blush', category: 'content', kind: 'attire', theme: 'blush', layout: 'fan', name: 'The Rose Fan', desc: 'A rosewater swatch fan for your wardrobe.' },
+        { id: 'attire-fan-azure', category: 'content', kind: 'attire', theme: 'azure', layout: 'fan', name: 'The Seaside Fan', desc: 'Sea-glass swatches fanned in hand.' },
+        { id: 'attire-fan-royal', category: 'content', kind: 'attire', theme: 'royal', layout: 'fan', name: 'The Royal Fan', desc: 'The court palette fanned in emerald and gold.', exclusive: true },
+        { id: 'attire-fan-ivory', category: 'content', kind: 'attire', theme: 'ivory', layout: 'fan', name: 'The Ivory Fan', desc: 'A quiet fan of neutral swatches.' },
+        { id: 'attire-fan-terra', category: 'content', kind: 'attire', theme: 'terra', layout: 'fan', name: 'The Sunset Fan', desc: 'Desert swatches fanned at golden hour.' },
+        { id: 'attire-fan-sage', category: 'content', kind: 'attire', theme: 'sage', layout: 'fan', name: 'The Meadow Fan', desc: 'A eucalyptus fan of garden swatches.' },
+        { id: 'attire-fan-dusk', category: 'content', kind: 'attire', theme: 'dusk', layout: 'fan', name: 'The Twilight Fan', desc: 'Evening swatches fanned in amber light.' },
+        { id: 'attire-fan-villa', category: 'content', kind: 'attire', theme: 'villa', layout: 'fan', name: 'The Villa Fan', desc: 'Plaster-and-brick swatches, fanned wide.' },
+        { id: 'attire-ward-noir', category: 'content', kind: 'attire', theme: 'noir', layout: 'wardrobe', name: 'The Midnight Wardrobe', desc: 'Palette swatches hung on a gilded rail.' },
+        { id: 'attire-ward-blush', category: 'content', kind: 'attire', theme: 'blush', layout: 'wardrobe', name: 'The Rose Wardrobe', desc: 'Soft swatches hanging from a rose rail.' },
+        { id: 'attire-ward-azure', category: 'content', kind: 'attire', theme: 'azure', layout: 'wardrobe', name: 'The Coastal Wardrobe', desc: 'Sea-toned swatches on a crisp rail.' },
+        { id: 'attire-ward-royal', category: 'content', kind: 'attire', theme: 'royal', layout: 'wardrobe', name: 'The Royal Wardrobe', desc: 'The court palette hung in gold.', exclusive: true },
+        { id: 'attire-ward-ivory', category: 'content', kind: 'attire', theme: 'ivory', layout: 'wardrobe', name: 'The Quiet Wardrobe', desc: 'Neutral swatches on a fine rail.' },
+        { id: 'attire-ward-terra', category: 'content', kind: 'attire', theme: 'terra', layout: 'wardrobe', name: 'The Desert Wardrobe', desc: 'Sunset swatches warming on the rail.' },
+        { id: 'attire-ward-sage', category: 'content', kind: 'attire', theme: 'sage', layout: 'wardrobe', name: 'The Garden Wardrobe', desc: 'Leafy swatches airing on a rail.' },
+        { id: 'attire-ward-dusk', category: 'content', kind: 'attire', theme: 'dusk', layout: 'wardrobe', name: 'The Evening Wardrobe', desc: 'Amber swatches hung at blue hour.' },
+        { id: 'attire-ward-villa', category: 'content', kind: 'attire', theme: 'villa', layout: 'wardrobe', name: 'The Villa Wardrobe', desc: 'Courtyard swatches on a plaster rail.' },
 
         /* ---- Mix & match: faq ---- */
         { id: 'faq-azure', category: 'content', kind: 'faq', theme: 'azure', name: 'Guest Handbook', desc: 'Answers to the questions guests always ask.' },
@@ -830,6 +1063,24 @@ window.VV = (function () {
         { id: 'faq-grid-sage', category: 'content', kind: 'faq', theme: 'sage', layout: 'grid', name: 'Garden Answers', desc: 'Numbered open answer cards in green.' },
         { id: 'faq-grid-dusk', category: 'content', kind: 'faq', theme: 'dusk', layout: 'grid', name: 'Twilight Answers', desc: 'Numbered answers glowing at dusk.' },
         { id: 'faq-grid-villa', category: 'content', kind: 'faq', theme: 'villa', layout: 'grid', name: 'Courtyard Answers', desc: 'Numbered open answers on warm plaster.' },
+        { id: 'faq-dia-noir', category: 'content', kind: 'faq', theme: 'noir', layout: 'dialogue', name: 'Midnight Correspondence', desc: 'Questions asked and answered, after dark.' },
+        { id: 'faq-dia-blush', category: 'content', kind: 'faq', theme: 'blush', layout: 'dialogue', name: 'Rosewater Correspondence', desc: 'A gentle exchange of asks and answers.' },
+        { id: 'faq-dia-azure', category: 'content', kind: 'faq', theme: 'azure', layout: 'dialogue', name: 'Coastal Correspondence', desc: 'A crisp back-and-forth for your guests.' },
+        { id: 'faq-dia-royal', category: 'content', kind: 'faq', theme: 'royal', layout: 'dialogue', name: 'The Court Correspondence', desc: 'Questions received and royally answered.', exclusive: true },
+        { id: 'faq-dia-ivory', category: 'content', kind: 'faq', theme: 'ivory', layout: 'dialogue', name: 'The Polite Exchange', desc: 'Questions and replies in quiet ink.' },
+        { id: 'faq-dia-terra', category: 'content', kind: 'faq', theme: 'terra', layout: 'dialogue', name: 'Desert Correspondence', desc: 'Warm asks and answers in clay tones.' },
+        { id: 'faq-dia-sage', category: 'content', kind: 'faq', theme: 'sage', layout: 'dialogue', name: 'Garden Correspondence', desc: 'A leafy exchange of questions and replies.' },
+        { id: 'faq-dia-dusk', category: 'content', kind: 'faq', theme: 'dusk', layout: 'dialogue', name: 'Evening Correspondence', desc: 'Questions answered by lantern light.' },
+        { id: 'faq-dia-villa', category: 'content', kind: 'faq', theme: 'villa', layout: 'dialogue', name: 'Courtyard Correspondence', desc: 'Asks and answers across the courtyard.' },
+        { id: 'faq-notes-noir', category: 'content', kind: 'faq', theme: 'noir', layout: 'notes', name: 'Midnight Programme Notes', desc: 'Guest notes ruled in champagne gold.' },
+        { id: 'faq-notes-blush', category: 'content', kind: 'faq', theme: 'blush', layout: 'notes', name: 'Petal Programme Notes', desc: 'Soft programme notes for your guests.' },
+        { id: 'faq-notes-azure', category: 'content', kind: 'faq', theme: 'azure', layout: 'notes', name: 'Harbour Programme Notes', desc: 'Clean ruled notes for the day.' },
+        { id: 'faq-notes-royal', category: 'content', kind: 'faq', theme: 'royal', layout: 'notes', name: 'The Court Notes', desc: 'Formal programme notes ruled in gold.', exclusive: true },
+        { id: 'faq-notes-ivory', category: 'content', kind: 'faq', theme: 'ivory', layout: 'notes', name: 'The Programme Notes', desc: 'Quiet answers set like a concert page.' },
+        { id: 'faq-notes-terra', category: 'content', kind: 'faq', theme: 'terra', layout: 'notes', name: 'Sundown Programme Notes', desc: 'Golden notes for your guests.' },
+        { id: 'faq-notes-sage', category: 'content', kind: 'faq', theme: 'sage', layout: 'notes', name: 'Meadow Programme Notes', desc: 'Fresh green notes for the garden day.' },
+        { id: 'faq-notes-dusk', category: 'content', kind: 'faq', theme: 'dusk', layout: 'notes', name: 'Twilight Programme Notes', desc: 'Evening notes ruled in amber.' },
+        { id: 'faq-notes-villa', category: 'content', kind: 'faq', theme: 'villa', layout: 'notes', name: 'Villa Programme Notes', desc: 'Courtyard notes on warm plaster.' },
 
         /* ---- Mix & match: travel ---- */
         { id: 'travel-azure', category: 'content', kind: 'travel', theme: 'azure', name: 'Getting There', desc: 'Flights, transport and stay tips for guests.' },
@@ -850,6 +1101,24 @@ window.VV = (function () {
         { id: 'travel-route-sage', category: 'content', kind: 'travel', theme: 'sage', layout: 'route', name: 'The Meadow Route', desc: 'A leafy journey line, stop by stop.' },
         { id: 'travel-route-dusk', category: 'content', kind: 'travel', theme: 'dusk', layout: 'route', name: 'The Twilight Route', desc: 'An amber journey line through the evening.' },
         { id: 'travel-route-villa', category: 'content', kind: 'travel', theme: 'villa', layout: 'route', name: 'The Villa Route', desc: 'A warm journey line winding to the courtyard.' },
+        { id: 'travel-post-noir', category: 'content', kind: 'travel', theme: 'noir', layout: 'postcard', name: 'Midnight Postcards', desc: 'Travel notes stamped after dark.' },
+        { id: 'travel-post-blush', category: 'content', kind: 'travel', theme: 'blush', layout: 'postcard', name: 'Rosewater Postcards', desc: 'Soft postcards of tips for the journey.' },
+        { id: 'travel-post-azure', category: 'content', kind: 'travel', theme: 'azure', layout: 'postcard', name: 'Postcards From The Coast', desc: 'Stamped, postmarked travel notes.' },
+        { id: 'travel-post-royal', category: 'content', kind: 'travel', theme: 'royal', layout: 'postcard', name: 'The Royal Postcards', desc: 'Gilded postcards from the court.', exclusive: true },
+        { id: 'travel-post-ivory', category: 'content', kind: 'travel', theme: 'ivory', layout: 'postcard', name: 'The Ivory Postcards', desc: 'Quiet monochrome travel postcards.' },
+        { id: 'travel-post-terra', category: 'content', kind: 'travel', theme: 'terra', layout: 'postcard', name: 'Desert Postcards', desc: 'Sun-baked postcards from the road.' },
+        { id: 'travel-post-sage', category: 'content', kind: 'travel', theme: 'sage', layout: 'postcard', name: 'Meadow Postcards', desc: 'Botanical postcards for the journey in.' },
+        { id: 'travel-post-dusk', category: 'content', kind: 'travel', theme: 'dusk', layout: 'postcard', name: 'Twilight Postcards', desc: 'Evening postcards, stamped in amber.' },
+        { id: 'travel-post-villa', category: 'content', kind: 'travel', theme: 'villa', layout: 'postcard', name: 'Courtyard Postcards', desc: 'Postcards home from the villa.' },
+        { id: 'travel-conc-noir', category: 'content', kind: 'travel', theme: 'noir', layout: 'concierge', name: 'The Midnight Concierge', desc: 'Travel wisdom from the night desk.' },
+        { id: 'travel-conc-blush', category: 'content', kind: 'travel', theme: 'blush', layout: 'concierge', name: 'The Rose Concierge', desc: 'Gentle guidance from the concierge desk.' },
+        { id: 'travel-conc-azure', category: 'content', kind: 'travel', theme: 'azure', layout: 'concierge', name: 'The Harbour Concierge', desc: 'Crisp notes from the concierge desk.' },
+        { id: 'travel-conc-royal', category: 'content', kind: 'travel', theme: 'royal', layout: 'concierge', name: 'The Royal Concierge', desc: 'Courtly guidance for honoured guests.', exclusive: true },
+        { id: 'travel-conc-ivory', category: 'content', kind: 'travel', theme: 'ivory', layout: 'concierge', name: 'The Concierge Desk', desc: 'Quiet numbered notes for your arrival.' },
+        { id: 'travel-conc-terra', category: 'content', kind: 'travel', theme: 'terra', layout: 'concierge', name: 'The Desert Concierge', desc: 'Warm guidance for desert travellers.' },
+        { id: 'travel-conc-sage', category: 'content', kind: 'travel', theme: 'sage', layout: 'concierge', name: 'The Garden Concierge', desc: 'Green-thumbed notes for your journey.' },
+        { id: 'travel-conc-dusk', category: 'content', kind: 'travel', theme: 'dusk', layout: 'concierge', name: 'The Evening Concierge', desc: 'Lantern-lit notes from the desk.' },
+        { id: 'travel-conc-villa', category: 'content', kind: 'travel', theme: 'villa', layout: 'concierge', name: 'The Villa Concierge', desc: 'House notes from the courtyard desk.' },
 
         /* ---- Mix & match: dusk theme set ---- */
         { id: 'couple-dusk', category: 'content', kind: 'couple', theme: 'dusk', name: 'Evening Introductions', desc: 'Bride & groom in amber on midnight blue.' },
@@ -885,6 +1154,24 @@ window.VV = (function () {
         { id: 'party-roll-sage', category: 'content', kind: 'party', theme: 'sage', layout: 'roll', name: 'Meadow Roll Call', desc: 'A leafy centred roll of your people.' },
         { id: 'party-roll-dusk', category: 'content', kind: 'party', theme: 'dusk', layout: 'roll', name: 'Lantern Roll Call', desc: 'Names lit softly against the evening.' },
         { id: 'party-roll-villa', category: 'content', kind: 'party', theme: 'villa', layout: 'roll', name: 'Villa Roll Call', desc: 'A courtyard roll call in brick and plaster.' },
+        { id: 'party-med-noir', category: 'content', kind: 'party', theme: 'noir', layout: 'medallion', name: 'Midnight Medallions', desc: 'Your party in gold-ringed monograms.' },
+        { id: 'party-med-blush', category: 'content', kind: 'party', theme: 'blush', layout: 'medallion', name: 'Rosewater Medallions', desc: 'The entourage in soft rose medallions.' },
+        { id: 'party-med-azure', category: 'content', kind: 'party', theme: 'azure', layout: 'medallion', name: 'Seaside Medallions', desc: 'Crisp initial medallions for your party.' },
+        { id: 'party-med-royal', category: 'content', kind: 'party', theme: 'royal', layout: 'medallion', name: 'The Court Medallions', desc: 'The royal party struck in gold.', exclusive: true },
+        { id: 'party-med-ivory', category: 'content', kind: 'party', theme: 'ivory', layout: 'medallion', name: 'The Ivory Medallions', desc: 'Quiet monogram medallions, finely ruled.' },
+        { id: 'party-med-terra', category: 'content', kind: 'party', theme: 'terra', layout: 'medallion', name: 'Sunset Medallions', desc: 'The party in warm clay medallions.' },
+        { id: 'party-med-sage', category: 'content', kind: 'party', theme: 'sage', layout: 'medallion', name: 'Meadow Medallions', desc: 'Leafy medallions for your closest people.' },
+        { id: 'party-med-dusk', category: 'content', kind: 'party', theme: 'dusk', layout: 'medallion', name: 'Twilight Medallions', desc: 'Amber medallions at the blue hour.' },
+        { id: 'party-med-villa', category: 'content', kind: 'party', theme: 'villa', layout: 'medallion', name: 'Courtyard Medallions', desc: 'Brick-red medallions on plaster.' },
+        { id: 'party-bill-noir', category: 'content', kind: 'party', theme: 'noir', layout: 'playbill', name: 'The Midnight Playbill', desc: 'The cast of the evening, in order.' },
+        { id: 'party-bill-blush', category: 'content', kind: 'party', theme: 'blush', layout: 'playbill', name: 'The Rose Playbill', desc: 'A soft cast list of your dearest.' },
+        { id: 'party-bill-azure', category: 'content', kind: 'party', theme: 'azure', layout: 'playbill', name: 'The Seaside Playbill', desc: 'A clean cast list, dotted and led.' },
+        { id: 'party-bill-royal', category: 'content', kind: 'party', theme: 'royal', layout: 'playbill', name: 'The Royal Playbill', desc: 'The court cast announced in gold.', exclusive: true },
+        { id: 'party-bill-ivory', category: 'content', kind: 'party', theme: 'ivory', layout: 'playbill', name: 'The Playbill', desc: 'Your people billed like opening night.' },
+        { id: 'party-bill-terra', category: 'content', kind: 'party', theme: 'terra', layout: 'playbill', name: 'The Sundown Playbill', desc: 'A golden cast list for the day.' },
+        { id: 'party-bill-sage', category: 'content', kind: 'party', theme: 'sage', layout: 'playbill', name: 'The Garden Playbill', desc: 'The cast of the garden celebration.' },
+        { id: 'party-bill-dusk', category: 'content', kind: 'party', theme: 'dusk', layout: 'playbill', name: 'The Twilight Playbill', desc: 'The evening cast, softly lit.' },
+        { id: 'party-bill-villa', category: 'content', kind: 'party', theme: 'villa', layout: 'playbill', name: 'The Villa Playbill', desc: 'The courtyard cast, billed in brick.' },
 
         /* ---- Mix & match: live stream ---- */
         { id: 'stream-azure', category: 'content', kind: 'stream', theme: 'azure', name: 'Watch From Afar', desc: 'A live-stream card for faraway guests.' },
@@ -905,6 +1192,24 @@ window.VV = (function () {
         { id: 'stream-theatre-sage', category: 'content', kind: 'stream', theme: 'sage', layout: 'theatre', name: 'Garden Theatre', desc: 'An open-air screen among the greens.' },
         { id: 'stream-theatre-dusk', category: 'content', kind: 'stream', theme: 'dusk', layout: 'theatre', name: 'Blue Hour Theatre', desc: 'A twilight screen with an amber play button.' },
         { id: 'stream-theatre-villa', category: 'content', kind: 'stream', theme: 'villa', layout: 'theatre', name: 'Courtyard Cinema', desc: 'A warm plaster screen for the broadcast.' },
+        { id: 'stream-onair-noir', category: 'content', kind: 'stream', theme: 'noir', layout: 'onair', name: 'Midnight On Air', desc: 'A glowing on-air lamp for the broadcast.' },
+        { id: 'stream-onair-blush', category: 'content', kind: 'stream', theme: 'blush', layout: 'onair', name: 'Rosewater On Air', desc: 'A soft studio lamp for faraway guests.' },
+        { id: 'stream-onair-azure', category: 'content', kind: 'stream', theme: 'azure', layout: 'onair', name: 'Harbour On Air', desc: 'A crisp on-air sign for the stream.' },
+        { id: 'stream-onair-royal', category: 'content', kind: 'stream', theme: 'royal', layout: 'onair', name: 'The Sovereign Signal', desc: 'The royal on-air lamp, lit in gold.', exclusive: true },
+        { id: 'stream-onair-ivory', category: 'content', kind: 'stream', theme: 'ivory', layout: 'onair', name: 'Quietly On Air', desc: 'A minimal on-air lamp in ivory.' },
+        { id: 'stream-onair-terra', category: 'content', kind: 'stream', theme: 'terra', layout: 'onair', name: 'Sundown On Air', desc: 'A warm studio lamp at golden hour.' },
+        { id: 'stream-onair-sage', category: 'content', kind: 'stream', theme: 'sage', layout: 'onair', name: 'Meadow On Air', desc: 'A garden studio lamp in green.' },
+        { id: 'stream-onair-dusk', category: 'content', kind: 'stream', theme: 'dusk', layout: 'onair', name: 'Twilight On Air', desc: 'An amber on-air lamp at blue hour.' },
+        { id: 'stream-onair-villa', category: 'content', kind: 'stream', theme: 'villa', layout: 'onair', name: 'Villa On Air', desc: 'A courtyard on-air lamp in brick.' },
+        { id: 'stream-wave-noir', category: 'content', kind: 'stream', theme: 'noir', layout: 'wave', name: 'The Midnight Frequency', desc: 'Tune in on a champagne soundwave.' },
+        { id: 'stream-wave-blush', category: 'content', kind: 'stream', theme: 'blush', layout: 'wave', name: 'The Rose Frequency', desc: 'A soft signal for faraway loved ones.' },
+        { id: 'stream-wave-azure', category: 'content', kind: 'stream', theme: 'azure', layout: 'wave', name: 'The Harbour Frequency', desc: 'A clean coastal signal, live all day.' },
+        { id: 'stream-wave-royal', category: 'content', kind: 'stream', theme: 'royal', layout: 'wave', name: 'The Royal Frequency', desc: 'The court broadcast on a gilded wave.', exclusive: true },
+        { id: 'stream-wave-ivory', category: 'content', kind: 'stream', theme: 'ivory', layout: 'wave', name: 'The Quiet Frequency', desc: 'A minimal signal in ivory and ink.' },
+        { id: 'stream-wave-terra', category: 'content', kind: 'stream', theme: 'terra', layout: 'wave', name: 'The Golden Frequency', desc: 'A warm signal riding the sunset.' },
+        { id: 'stream-wave-sage', category: 'content', kind: 'stream', theme: 'sage', layout: 'wave', name: 'The Meadow Frequency', desc: 'A fresh green signal from the garden.' },
+        { id: 'stream-wave-dusk', category: 'content', kind: 'stream', theme: 'dusk', layout: 'wave', name: 'The Twilight Frequency', desc: 'An amber signal through the blue hour.' },
+        { id: 'stream-wave-villa', category: 'content', kind: 'stream', theme: 'villa', layout: 'wave', name: 'The Villa Frequency', desc: 'A courtyard signal in brick red.' },
 
         /* ---- Mix & match: photo strip ---- */
         { id: 'filmstrip-ivory', category: 'content', kind: 'filmstrip', theme: 'ivory', name: 'The Contact Sheet', desc: 'A slow-drifting monochrome film strip.' },
@@ -925,6 +1230,24 @@ window.VV = (function () {
         { id: 'filmstrip-double-sage', category: 'content', kind: 'filmstrip', theme: 'sage', layout: 'double', name: 'Meadow Double Reel', desc: 'Two green-tinted reels in counter-flow.' },
         { id: 'filmstrip-double-dusk', category: 'content', kind: 'filmstrip', theme: 'dusk', layout: 'double', name: 'Twilight Double Reel', desc: 'Twin reels drifting through the blue hour.' },
         { id: 'filmstrip-double-villa', category: 'content', kind: 'filmstrip', theme: 'villa', layout: 'double', name: 'Villa Double Reel', desc: 'Two warm reels winding past the courtyard.' },
+        { id: 'filmstrip-line-noir', category: 'content', kind: 'filmstrip', theme: 'noir', layout: 'clothesline', name: 'Midnight Clothesline', desc: 'Photographs pinned and drifting after dark.' },
+        { id: 'filmstrip-line-blush', category: 'content', kind: 'filmstrip', theme: 'blush', layout: 'clothesline', name: 'Petal Clothesline', desc: 'Pinned photographs swaying in rose.' },
+        { id: 'filmstrip-line-azure', category: 'content', kind: 'filmstrip', theme: 'azure', layout: 'clothesline', name: 'Seaside Clothesline', desc: 'Photographs pinned along the shore breeze.' },
+        { id: 'filmstrip-line-royal', category: 'content', kind: 'filmstrip', theme: 'royal', layout: 'clothesline', name: 'The Royal Clothesline', desc: 'Court photographs pinned in gold.', exclusive: true },
+        { id: 'filmstrip-line-ivory', category: 'content', kind: 'filmstrip', theme: 'ivory', layout: 'clothesline', name: 'The Darkroom Line', desc: 'Prints pinned up to dry, drifting past.' },
+        { id: 'filmstrip-line-terra', category: 'content', kind: 'filmstrip', theme: 'terra', layout: 'clothesline', name: 'Golden Clothesline', desc: 'Sun-warmed photographs on the line.' },
+        { id: 'filmstrip-line-sage', category: 'content', kind: 'filmstrip', theme: 'sage', layout: 'clothesline', name: 'Garden Clothesline', desc: 'Photographs pinned among the greens.' },
+        { id: 'filmstrip-line-dusk', category: 'content', kind: 'filmstrip', theme: 'dusk', layout: 'clothesline', name: 'Twilight Clothesline', desc: 'Pinned photographs in the evening air.' },
+        { id: 'filmstrip-line-villa', category: 'content', kind: 'filmstrip', theme: 'villa', layout: 'clothesline', name: 'Courtyard Clothesline', desc: 'Photographs strung across the courtyard.' },
+        { id: 'filmstrip-film-noir', category: 'content', kind: 'filmstrip', theme: 'noir', layout: 'film', name: 'Midnight Cinema Reel', desc: 'True sprocketed film, rolling after dark.' },
+        { id: 'filmstrip-film-blush', category: 'content', kind: 'filmstrip', theme: 'blush', layout: 'film', name: 'Rose Cinema Reel', desc: 'A sprocketed reel of blushing frames.' },
+        { id: 'filmstrip-film-azure', category: 'content', kind: 'filmstrip', theme: 'azure', layout: 'film', name: 'Seaside Cinema Reel', desc: 'Sprocketed frames drifting past the coast.' },
+        { id: 'filmstrip-film-royal', category: 'content', kind: 'filmstrip', theme: 'royal', layout: 'film', name: 'The Royal Cinema Reel', desc: 'A gilded film reel of court moments.', exclusive: true },
+        { id: 'filmstrip-film-ivory', category: 'content', kind: 'filmstrip', theme: 'ivory', layout: 'film', name: 'The Contact Reel', desc: 'Sprocketed monochrome frames in motion.' },
+        { id: 'filmstrip-film-terra', category: 'content', kind: 'filmstrip', theme: 'terra', layout: 'film', name: 'Golden Cinema Reel', desc: 'Warm sprocketed frames at sundown.' },
+        { id: 'filmstrip-film-sage', category: 'content', kind: 'filmstrip', theme: 'sage', layout: 'film', name: 'Meadow Cinema Reel', desc: 'A green-tinted reel of garden moments.' },
+        { id: 'filmstrip-film-dusk', category: 'content', kind: 'filmstrip', theme: 'dusk', layout: 'film', name: 'Twilight Cinema Reel', desc: 'Sprocketed frames through the blue hour.' },
+        { id: 'filmstrip-film-villa', category: 'content', kind: 'filmstrip', theme: 'villa', layout: 'film', name: 'Villa Cinema Reel', desc: 'A courtyard film reel on plaster.' },
 
         /* ---- Mix & match: monogram divider ---- */
         { id: 'divider-ivory', category: 'content', kind: 'divider', theme: 'ivory', name: 'Porcelain Seal', desc: 'A quiet monogram breath between chapters.' },
@@ -945,6 +1268,24 @@ window.VV = (function () {
         { id: 'divider-crest-sage', category: 'content', kind: 'divider', theme: 'sage', layout: 'crest', name: 'Meadow Crest', desc: 'A leafy diamond crest with the date.' },
         { id: 'divider-crest-dusk', category: 'content', kind: 'divider', theme: 'dusk', layout: 'crest', name: 'Amber Crest', desc: 'A glowing diamond crest at the blue hour.' },
         { id: 'divider-crest-villa', category: 'content', kind: 'divider', theme: 'villa', layout: 'crest', name: 'Courtyard Crest', desc: 'A brick-red diamond crest on plaster.' },
+        { id: 'divider-flourish-noir', category: 'content', kind: 'divider', theme: 'noir', layout: 'flourish', name: 'The Midnight Flourish', desc: 'A script ampersand between gilded swashes.' },
+        { id: 'divider-flourish-blush', category: 'content', kind: 'divider', theme: 'blush', layout: 'flourish', name: 'The Rose Flourish', desc: 'A tender ampersand with trailing swashes.' },
+        { id: 'divider-flourish-azure', category: 'content', kind: 'divider', theme: 'azure', layout: 'flourish', name: 'The Seaside Flourish', desc: 'A crisp calligraphic breath between chapters.' },
+        { id: 'divider-flourish-royal', category: 'content', kind: 'divider', theme: 'royal', layout: 'flourish', name: 'The Royal Flourish', desc: 'A sovereign ampersand swashed in gold.', exclusive: true },
+        { id: 'divider-flourish-ivory', category: 'content', kind: 'divider', theme: 'ivory', layout: 'flourish', name: 'The Ivory Flourish', desc: 'A quiet calligraphic pause in ink.' },
+        { id: 'divider-flourish-terra', category: 'content', kind: 'divider', theme: 'terra', layout: 'flourish', name: 'The Golden Flourish', desc: 'A warm ampersand trailing sunset lines.' },
+        { id: 'divider-flourish-sage', category: 'content', kind: 'divider', theme: 'sage', layout: 'flourish', name: 'The Meadow Flourish', desc: 'A leafy calligraphic breath in green.' },
+        { id: 'divider-flourish-dusk', category: 'content', kind: 'divider', theme: 'dusk', layout: 'flourish', name: 'The Twilight Flourish', desc: 'An amber ampersand at the blue hour.' },
+        { id: 'divider-flourish-villa', category: 'content', kind: 'divider', theme: 'villa', layout: 'flourish', name: 'The Villa Flourish', desc: 'A brick-red flourish on warm plaster.' },
+        { id: 'divider-laurel-noir', category: 'content', kind: 'divider', theme: 'noir', layout: 'laurel', name: 'The Midnight Laurel', desc: 'Initials wreathed in champagne leaves.' },
+        { id: 'divider-laurel-blush', category: 'content', kind: 'divider', theme: 'blush', layout: 'laurel', name: 'The Rose Laurel', desc: 'A blush wreath around your initials.' },
+        { id: 'divider-laurel-azure', category: 'content', kind: 'divider', theme: 'azure', layout: 'laurel', name: 'The Seaside Laurel', desc: 'Initials ringed in coastal calm.' },
+        { id: 'divider-laurel-royal', category: 'content', kind: 'divider', theme: 'royal', layout: 'laurel', name: 'The Royal Laurel', desc: 'A gold wreath around the court monogram.', exclusive: true },
+        { id: 'divider-laurel-ivory', category: 'content', kind: 'divider', theme: 'ivory', layout: 'laurel', name: 'The Ivory Laurel', desc: 'A quiet wreath in porcelain and ink.' },
+        { id: 'divider-laurel-terra', category: 'content', kind: 'divider', theme: 'terra', layout: 'laurel', name: 'The Desert Laurel', desc: 'Initials wreathed in golden clay.' },
+        { id: 'divider-laurel-sage', category: 'content', kind: 'divider', theme: 'sage', layout: 'laurel', name: 'The Meadow Laurel', desc: 'A eucalyptus wreath around two letters.' },
+        { id: 'divider-laurel-dusk', category: 'content', kind: 'divider', theme: 'dusk', layout: 'laurel', name: 'The Twilight Laurel', desc: 'An amber wreath at the blue hour.' },
+        { id: 'divider-laurel-villa', category: 'content', kind: 'divider', theme: 'villa', layout: 'laurel', name: 'The Courtyard Laurel', desc: 'A brick wreath on sunlit plaster.' },
 
         /* ---- Outro pages ---- */
         { id: 'outro-noir', category: 'outro', kind: 'outro', theme: 'noir', name: 'Final Bow', desc: 'A cinematic thank-you over a dimmed photograph.' },
@@ -964,7 +1305,70 @@ window.VV = (function () {
         { id: 'outro-polaroid-ivory', category: 'outro', kind: 'outro', theme: 'ivory', layout: 'polaroid', name: 'The Keepsake', desc: 'A monochrome polaroid closing the album.' },
         { id: 'outro-polaroid-terra', category: 'outro', kind: 'outro', theme: 'terra', layout: 'polaroid', name: 'Golden Keepsake', desc: 'A sun-warmed polaroid farewell.' },
         { id: 'outro-polaroid-sage', category: 'outro', kind: 'outro', theme: 'sage', layout: 'polaroid', name: 'Meadow Keepsake', desc: 'A pressed-flower polaroid thank-you.' },
-        { id: 'outro-polaroid-villa', category: 'outro', kind: 'outro', theme: 'villa', layout: 'polaroid', name: 'Courtyard Keepsake', desc: 'A keepsake photograph pinned to warm plaster.' }
+        { id: 'outro-polaroid-villa', category: 'outro', kind: 'outro', theme: 'villa', layout: 'polaroid', name: 'Courtyard Keepsake', desc: 'A keepsake photograph pinned to warm plaster.' },
+        { id: 'outro-credits-noir', category: 'outro', kind: 'outro', theme: 'noir', layout: 'credits', name: 'The Midnight Credits', desc: 'The evening rolls its closing credits.' },
+        { id: 'outro-credits-blush', category: 'outro', kind: 'outro', theme: 'blush', layout: 'credits', name: 'The Rose Credits', desc: 'A gentle credit roll for the love story.' },
+        { id: 'outro-credits-azure', category: 'outro', kind: 'outro', theme: 'azure', layout: 'credits', name: 'The Coastal Credits', desc: 'Clean closing credits by the sea.' },
+        { id: 'outro-credits-royal', category: 'outro', kind: 'outro', theme: 'royal', layout: 'credits', name: 'The Royal Credits', desc: 'The court takes its final bow in gold.', exclusive: true },
+        { id: 'outro-credits-ivory', category: 'outro', kind: 'outro', theme: 'ivory', layout: 'credits', name: 'The Closing Credits', desc: 'An editorial credit roll — then the beginning.' },
+        { id: 'outro-credits-terra', category: 'outro', kind: 'outro', theme: 'terra', layout: 'credits', name: 'The Sundown Credits', desc: 'Golden credits as the day fades out.' },
+        { id: 'outro-credits-sage', category: 'outro', kind: 'outro', theme: 'sage', layout: 'credits', name: 'The Garden Credits', desc: 'Leafy closing credits for the day.' },
+        { id: 'outro-credits-dusk', category: 'outro', kind: 'outro', theme: 'dusk', layout: 'credits', name: 'The Twilight Credits', desc: 'Credits rolling into the blue hour.' },
+        { id: 'outro-credits-villa', category: 'outro', kind: 'outro', theme: 'villa', layout: 'credits', name: 'The Villa Credits', desc: 'Courtyard credits as the lights dim.' },
+        { id: 'outro-ps-noir', category: 'outro', kind: 'outro', theme: 'noir', layout: 'postscript', name: 'The Midnight Postscript', desc: 'One last line, sealed after dark.' },
+        { id: 'outro-ps-blush', category: 'outro', kind: 'outro', theme: 'blush', layout: 'postscript', name: 'The Rose Postscript', desc: 'A soft P.S. signed with love.' },
+        { id: 'outro-ps-azure', category: 'outro', kind: 'outro', theme: 'azure', layout: 'postscript', name: 'The Seaside Postscript', desc: 'A crisp last line before the send-off.' },
+        { id: 'outro-ps-royal', category: 'outro', kind: 'outro', theme: 'royal', layout: 'postscript', name: 'The Royal Postscript', desc: 'A final word beneath the sovereign seal.', exclusive: true },
+        { id: 'outro-ps-ivory', category: 'outro', kind: 'outro', theme: 'ivory', layout: 'postscript', name: 'The Postscript', desc: 'A quiet P.S. to end the letter.' },
+        { id: 'outro-ps-terra', category: 'outro', kind: 'outro', theme: 'terra', layout: 'postscript', name: 'The Golden Postscript', desc: 'A warm last line as the sun slips away.' },
+        { id: 'outro-ps-sage', category: 'outro', kind: 'outro', theme: 'sage', layout: 'postscript', name: 'The Meadow Postscript', desc: 'A leafy P.S. pressed with love.' },
+        { id: 'outro-ps-dusk', category: 'outro', kind: 'outro', theme: 'dusk', layout: 'postscript', name: 'The Twilight Postscript', desc: 'An amber P.S. at the blue hour.' },
+        { id: 'outro-ps-villa', category: 'outro', kind: 'outro', theme: 'villa', layout: 'postscript', name: 'The Courtyard Postscript', desc: 'A last line from the villa desk.' },
+        { id: 'outro-echo-noir', category: 'outro', kind: 'outro', theme: 'noir', layout: 'echo', name: 'The Midnight Echo', desc: 'Your names fading into the dark, together.' },
+        { id: 'outro-echo-blush', category: 'outro', kind: 'outro', theme: 'blush', layout: 'echo', name: 'The Rose Echo', desc: 'Two names echoing softly into rose.' },
+        { id: 'outro-echo-azure', category: 'outro', kind: 'outro', theme: 'azure', layout: 'echo', name: 'The Tide Echo', desc: 'Your names receding like the tide.' },
+        { id: 'outro-echo-royal', category: 'outro', kind: 'outro', theme: 'royal', layout: 'echo', name: 'The Sovereign Echo', desc: 'Names echoing through the court in gold.', exclusive: true },
+        { id: 'outro-echo-ivory', category: 'outro', kind: 'outro', theme: 'ivory', layout: 'echo', name: 'The Ivory Echo', desc: 'An editorial echo of two names.' },
+        { id: 'outro-echo-terra', category: 'outro', kind: 'outro', theme: 'terra', layout: 'echo', name: 'The Sunset Echo', desc: 'Your names dissolving into golden light.' },
+        { id: 'outro-echo-sage', category: 'outro', kind: 'outro', theme: 'sage', layout: 'echo', name: 'The Meadow Echo', desc: 'Two names echoing through the greens.' },
+        { id: 'outro-echo-dusk', category: 'outro', kind: 'outro', theme: 'dusk', layout: 'echo', name: 'The Twilight Echo', desc: 'Names echoing into the blue hour.' },
+        { id: 'outro-echo-villa', category: 'outro', kind: 'outro', theme: 'villa', layout: 'echo', name: 'The Villa Echo', desc: 'Two names fading on warm plaster.' },
+        { id: 'outro-bunting-noir', category: 'outro', kind: 'outro', theme: 'noir', layout: 'bunting', name: 'The Midnight Bunting', desc: 'Thank-you pennants strung after dark.' },
+        { id: 'outro-bunting-blush', category: 'outro', kind: 'outro', theme: 'blush', layout: 'bunting', name: 'The Petal Bunting', desc: 'A thank-you banner strung with rose flags.' },
+        { id: 'outro-bunting-azure', category: 'outro', kind: 'outro', theme: 'azure', layout: 'bunting', name: 'The Harbour Bunting', desc: 'Signal flags spelling a seaside thank-you.' },
+        { id: 'outro-bunting-royal', category: 'outro', kind: 'outro', theme: 'royal', layout: 'bunting', name: 'The Court Bunting', desc: 'A gilded thank-you strung across the court.', exclusive: true },
+        { id: 'outro-bunting-ivory', category: 'outro', kind: 'outro', theme: 'ivory', layout: 'bunting', name: 'The Quiet Bunting', desc: 'Paper pennants spelling a soft thank-you.' },
+        { id: 'outro-bunting-terra', category: 'outro', kind: 'outro', theme: 'terra', layout: 'bunting', name: 'The Sunset Bunting', desc: 'Clay pennants swaying in golden light.' },
+        { id: 'outro-bunting-sage', category: 'outro', kind: 'outro', theme: 'sage', layout: 'bunting', name: 'The Garden Bunting', desc: 'A leafy banner spelling out thanks.' },
+        { id: 'outro-bunting-dusk', category: 'outro', kind: 'outro', theme: 'dusk', layout: 'bunting', name: 'The Lantern Bunting', desc: 'Amber pennants strung through the evening.' },
+        { id: 'outro-bunting-villa', category: 'outro', kind: 'outro', theme: 'villa', layout: 'bunting', name: 'The Courtyard Bunting', desc: 'Pennants strung across the plaster walls.' },
+        { id: 'outro-stars-noir', category: 'outro', kind: 'outro', theme: 'noir', layout: 'stars', name: 'Written In Midnight Stars', desc: 'Your initials joined across the night sky.' },
+        { id: 'outro-stars-blush', category: 'outro', kind: 'outro', theme: 'blush', layout: 'stars', name: 'Written In Rose Stars', desc: 'Two stars joined softly in rosewater.' },
+        { id: 'outro-stars-azure', category: 'outro', kind: 'outro', theme: 'azure', layout: 'stars', name: 'Written In Sea Stars', desc: 'A coastal constellation of two initials.' },
+        { id: 'outro-stars-royal', category: 'outro', kind: 'outro', theme: 'royal', layout: 'stars', name: 'Written In Royal Stars', desc: 'A court constellation drawn in gold.', exclusive: true },
+        { id: 'outro-stars-ivory', category: 'outro', kind: 'outro', theme: 'ivory', layout: 'stars', name: 'Written In Quiet Stars', desc: 'A hairline constellation of two names.' },
+        { id: 'outro-stars-terra', category: 'outro', kind: 'outro', theme: 'terra', layout: 'stars', name: 'Written In Desert Stars', desc: 'Two initials joined under desert skies.' },
+        { id: 'outro-stars-sage', category: 'outro', kind: 'outro', theme: 'sage', layout: 'stars', name: 'Written In Garden Stars', desc: 'A meadow constellation in green.' },
+        { id: 'outro-stars-dusk', category: 'outro', kind: 'outro', theme: 'dusk', layout: 'stars', name: 'Written In Twilight Stars', desc: 'Initials joined across the blue hour.' },
+        { id: 'outro-stars-villa', category: 'outro', kind: 'outro', theme: 'villa', layout: 'stars', name: 'Written In Villa Stars', desc: 'A courtyard constellation in brick.' },
+        { id: 'outro-toast-noir', category: 'outro', kind: 'outro', theme: 'noir', layout: 'toast', name: 'The Midnight Toast', desc: 'Champagne raised in the candlelight.' },
+        { id: 'outro-toast-blush', category: 'outro', kind: 'outro', theme: 'blush', layout: 'toast', name: 'The Rosewater Toast', desc: 'Two glasses touched in soft rose.' },
+        { id: 'outro-toast-azure', category: 'outro', kind: 'outro', theme: 'azure', layout: 'toast', name: 'The Seaside Toast', desc: 'A crisp toast raised to the horizon.' },
+        { id: 'outro-toast-royal', category: 'outro', kind: 'outro', theme: 'royal', layout: 'toast', name: 'The Royal Toast', desc: 'Coupes raised in emerald and gold.', exclusive: true },
+        { id: 'outro-toast-ivory', category: 'outro', kind: 'outro', theme: 'ivory', layout: 'toast', name: 'The Quiet Toast', desc: 'A fine-line toast in ivory and ink.' },
+        { id: 'outro-toast-terra', category: 'outro', kind: 'outro', theme: 'terra', layout: 'toast', name: 'The Sunset Toast', desc: 'Glasses catching the golden hour.' },
+        { id: 'outro-toast-sage', category: 'outro', kind: 'outro', theme: 'sage', layout: 'toast', name: 'The Garden Toast', desc: 'A toast raised among the greens.' },
+        { id: 'outro-toast-dusk', category: 'outro', kind: 'outro', theme: 'dusk', layout: 'toast', name: 'The Twilight Toast', desc: 'Amber glasses at the blue hour.' },
+        { id: 'outro-toast-villa', category: 'outro', kind: 'outro', theme: 'villa', layout: 'toast', name: 'The Courtyard Toast', desc: 'A toast rising over warm plaster.' },
+        { id: 'outro-rings-noir', category: 'outro', kind: 'outro', theme: 'noir', layout: 'rings', name: 'The Midnight Rings', desc: 'Two rings interlocked in champagne gold.' },
+        { id: 'outro-rings-blush', category: 'outro', kind: 'outro', theme: 'blush', layout: 'rings', name: 'The Rose Rings', desc: 'Two rings joined in rosewater.' },
+        { id: 'outro-rings-azure', category: 'outro', kind: 'outro', theme: 'azure', layout: 'rings', name: 'The Seaside Rings', desc: 'Two crisp rings, one horizon.' },
+        { id: 'outro-rings-royal', category: 'outro', kind: 'outro', theme: 'royal', layout: 'rings', name: 'The Sovereign Rings', desc: 'Interlocked rings struck in gold.', exclusive: true },
+        { id: 'outro-rings-ivory', category: 'outro', kind: 'outro', theme: 'ivory', layout: 'rings', name: 'The Quiet Rings', desc: 'Two hairline rings, one promise.' },
+        { id: 'outro-rings-terra', category: 'outro', kind: 'outro', theme: 'terra', layout: 'rings', name: 'The Golden Rings', desc: 'Two rings warmed by the sunset.' },
+        { id: 'outro-rings-sage', category: 'outro', kind: 'outro', theme: 'sage', layout: 'rings', name: 'The Meadow Rings', desc: 'Two rings entwined in green.' },
+        { id: 'outro-rings-dusk', category: 'outro', kind: 'outro', theme: 'dusk', layout: 'rings', name: 'The Twilight Rings', desc: 'Two rings glowing at the blue hour.' },
+        { id: 'outro-rings-villa', category: 'outro', kind: 'outro', theme: 'villa', layout: 'rings', name: 'The Courtyard Rings', desc: 'Two brick-red rings on plaster.' }
     ];
 
     const BY_ID = {};
@@ -1116,6 +1520,125 @@ window.VV = (function () {
 
     function renderLanding(tpl) {
         const b = D.bride.short, g = D.groom.short;
+        // 'inlay' — the couple's initials at monumental scale, each
+        // letter overlapping the edge of a fully visible portrait so
+        // the monogram embraces the photograph.
+        if (tpl.layout === 'inlay') {
+            return sectionOpen(tpl, 'tpl-full land-inlay') +
+                '<div class="land-inner li-stage">' +
+                '<p class="land-eyebrow">The Wedding Of</p>' +
+                '<div class="li-lockup">' +
+                '<b class="li-letter li-l serif">' + D.bride.initial + '</b>' +
+                '<figure class="li-frame"><img src="assets/images/pic-potrait-couple-1.jpg" data-slot="cover" alt="The couple"></figure>' +
+                '<b class="li-letter li-r serif">' + D.groom.initial + '</b>' +
+                '</div>' +
+                '<p class="li-names serif">' + b + ' <span class="script">&amp;</span> ' + g + '</p>' +
+                '<span class="sec-rule"></span>' +
+                '<p class="land-date">' + D.dateText + ' &middot; ' + D.city + '</p>' +
+                '<span class="land-scroll">Scroll to explore<i class="chev"></i></span>' +
+                '</div></section>';
+        }
+        // 'gatefold' — the photograph matted like double doors, parted
+        // by a hairline seam and sealed with a monogram medallion.
+        if (tpl.layout === 'gatefold') {
+            return sectionOpen(tpl, 'tpl-full land-gatefold') +
+                '<div class="land-inner lg-stage">' +
+                '<p class="land-eyebrow">The Wedding Of</p>' +
+                '<div class="lg-doors">' +
+                '<div class="lg-photo" data-slot-bg="cover" style="background-image:url(\'assets/images/landing-bg-pic-5.jpg\')"></div>' +
+                '<i class="lg-seam"></i>' +
+                '<span class="lg-medal serif">' + D.bride.initial + '&middot;' + D.groom.initial + '</span>' +
+                '</div>' +
+                '<h1 class="lg-names serif">' + b + ' <span class="land-amp script">&amp;</span> ' + g + '</h1>' +
+                '<p class="land-date">' + D.dateText + ' &middot; ' + D.city + '</p>' +
+                '<span class="land-scroll">Scroll to explore<i class="chev"></i></span>' +
+                '</div></section>';
+        }
+        // 'booth' — a photo-booth strip taped up beside the names,
+        // like the keepsake pinned to the fridge.
+        if (tpl.layout === 'booth') {
+            return sectionOpen(tpl, 'tpl-full land-booth') +
+                '<div class="lb-wrap">' +
+                '<figure class="lb-strip">' +
+                '<i class="lb-tape"></i>' +
+                '<img src="assets/images/bride-and-groom-1.jpg" data-slot="cover" alt="The couple">' +
+                '<img src="assets/images/pic-gallery-1.jpg" alt="Wedding moment">' +
+                '<img src="assets/images/pic-potrait-couple-2.jpg" alt="Wedding moment">' +
+                '<figcaption class="script">' + D.dateShort + '</figcaption>' +
+                '</figure>' +
+                '<div class="lb-copy">' +
+                '<p class="land-eyebrow">Save The Date For</p>' +
+                '<h1 class="lb-names serif"><span>' + b + '</span><em class="script">&amp;</em><span>' + g + '</span></h1>' +
+                '<span class="sec-rule"></span>' +
+                '<p class="land-date">' + D.dateText + '<br>' + D.city + '</p>' +
+                '<span class="land-scroll">Scroll to explore<i class="chev"></i></span>' +
+                '</div></div></section>';
+        }
+        // 'arcade' — hairline archways receding like a colonnade, the
+        // names waiting at the end of the corridor.
+        if (tpl.layout === 'arcade') {
+            let arches = '';
+            for (let a = 0; a < 5; a++) arches += '<i class="la-arch" style="--la:' + a + '"></i>';
+            return sectionOpen(tpl, 'tpl-full land-arcade') +
+                '<div class="land-inner la-stage">' +
+                '<p class="land-eyebrow">Walk With Us</p>' +
+                '<div class="la-arches" aria-hidden="true">' + arches +
+                '<span class="la-amp script">&amp;</span>' +
+                '</div>' +
+                '<h1 class="la-names serif">' + b + ' <span class="land-amp script">&amp;</span> ' + g + '</h1>' +
+                '<span class="sec-rule"></span>' +
+                '<p class="land-date">' + D.dateText + ' &middot; ' + D.city + '</p>' +
+                '<span class="land-scroll">Scroll to explore<i class="chev"></i></span>' +
+                '</div></section>';
+        }
+        // 'veil' — the photograph in full view behind a frosted glass
+        // pane that carries the invitation in the theme's own tones.
+        if (tpl.layout === 'veil') {
+            return sectionOpen(tpl, 'tpl-full land-veilpane') +
+                '<div class="land-bg" data-slot-bg="cover" style="background-image:url(\'assets/images/landing-bg-pic-1.jpg\')"></div>' +
+                '<div class="lv-tint"></div>' +
+                '<div class="land-inner lv-card">' +
+                '<p class="lv-mono serif">' + D.bride.initial + '&nbsp;·&nbsp;' + D.groom.initial + '</p>' +
+                '<p class="land-eyebrow">Together With Their Families</p>' +
+                '<h1 class="lv-names serif">' + b + ' <span class="land-amp script">&amp;</span> ' + g + '</h1>' +
+                '<span class="sec-rule"></span>' +
+                '<p class="land-date">' + D.dateFormal + '</p>' +
+                '<p class="lv-city">' + D.city + '</p>' +
+                '<span class="land-scroll">Scroll to explore<i class="chev"></i></span>' +
+                '</div></section>';
+        }
+        // 'cover' — a full-bleed editorial cover: a masthead rule up
+        // top, the names set low like a magazine title.
+        if (tpl.layout === 'cover') {
+            return sectionOpen(tpl, 'tpl-full land-cover') +
+                '<div class="land-bg" data-slot-bg="cover" style="background-image:url(\'assets/images/landing-bg-pic-4.jpg\')"></div>' +
+                '<div class="lc-veil"></div>' +
+                '<header class="lc-mast">' +
+                '<span>The Wedding Issue</span><i></i><span>' + D.dateShort + '</span>' +
+                '</header>' +
+                '<div class="lc-copy">' +
+                '<p class="land-eyebrow">A Love Story From ' + D.city + '</p>' +
+                '<h1 class="lc-names serif"><span>' + b + '</span><em class="lc-amp script">&amp;</em><span>' + g + '</span></h1>' +
+                '<p class="lc-line">' + D.dateText + ' &middot; ' + D.hashtag + '</p>' +
+                '<span class="land-scroll">Scroll to explore<i class="chev"></i></span>' +
+                '</div></section>';
+        }
+        // 'premiere' — a cinematic title card: letterboxed, laurelled
+        // and billed like opening night.
+        if (tpl.layout === 'premiere') {
+            return sectionOpen(tpl, 'tpl-full land-premiere') +
+                '<i class="prem-bar prem-top"></i>' +
+                '<div class="land-inner prem-inner">' +
+                '<p class="prem-billing">The Families Of ' + b + ' &amp; ' + g + ' Proudly Present</p>' +
+                '<p class="prem-laurel"><span class="prem-leaf">❧</span><span>A True Love Story</span><span class="prem-leaf prem-flip">❧</span></p>' +
+                '<h1 class="prem-names serif">' + b + '<em class="script">&amp;</em>' + g + '</h1>' +
+                '<p class="prem-credit">Premiering ' + D.dateText + ' &middot; ' + D.city + '</p>' +
+                '<p class="prem-tag">' + D.hashtag + ' &middot; Est. ' + D.dateISO.slice(0, 4) + '</p>' +
+                '<span class="land-scroll">Scroll to explore<i class="chev"></i></span>' +
+                '</div>' +
+                '<i class="prem-bar prem-bot"></i>' +
+                '</section>';
+        }
         // 'marquee' — oversized stacked typography over a photo
         // triptych: the names carry the whole opening.
         if (tpl.layout === 'marquee') {
@@ -1292,6 +1815,47 @@ window.VV = (function () {
 
     function renderCouple(tpl) {
         const av = AVATAR_DEFAULTS[tpl.theme] || {};
+        // 'cameo' — antique oval locket portraits with engraved
+        // captions and a script ampersand medallion between them.
+        if (tpl.layout === 'cameo') {
+            const cameo = function (p, slot, img) {
+                return '<figure class="cameo">' +
+                    '<div class="cameo-oval"><img src="' + img + '" data-slot="' + slot + '" alt="' + p.role + '" loading="lazy"></div>' +
+                    '<figcaption class="cameo-cap">' +
+                    '<p class="cameo-role">' + p.role + '</p>' +
+                    '<h3 class="cameo-name serif">' + p.name + '</h3>' +
+                    '<p class="cameo-parents">' + p.parents + '</p>' +
+                    '<span class="cameo-ig">' + p.ig + '</span>' +
+                    '</figcaption></figure>';
+            };
+            return sectionOpen(tpl) +
+                secHead('Bride &amp; Groom', 'Kept In A Locket') +
+                '<div class="cameos">' +
+                cameo(D.bride, 'bride', av.bride || 'assets/images/bride-1.jpg') +
+                '<div class="cameo-mid"><i></i><span class="script">&amp;</span><i></i></div>' +
+                cameo(D.groom, 'groom', av.groom || 'assets/images/groom-1.jpg') +
+                '</div></section>';
+        }
+        // 'duet' — a purely typographic introduction: both names in
+        // towering serif either side of one great ghosted ampersand.
+        if (tpl.layout === 'duet') {
+            const col = function (p) {
+                return '<div class="duet-col">' +
+                    '<p class="duet-role">' + p.role + '</p>' +
+                    '<h3 class="duet-name serif">' + p.name + '</h3>' +
+                    '<p class="duet-parents">' + p.parents + '</p>' +
+                    '<span class="duet-ig">' + p.ig + '</span>' +
+                    '</div>';
+            };
+            return sectionOpen(tpl) +
+                secHead('Bride &amp; Groom', 'The Two Names') +
+                '<div class="duet">' +
+                '<span class="duet-mark script" aria-hidden="true">&amp;</span>' +
+                col(D.bride) +
+                '<i class="duet-line"></i>' +
+                col(D.groom) +
+                '</div></section>';
+        }
         // 'panels' — two full-height editorial photo panels, names set
         // into a scrim at the base, a floating ampersand between them.
         if (tpl.layout === 'panels') {
@@ -1332,6 +1896,42 @@ window.VV = (function () {
     }
 
     function renderStory(tpl) {
+        // 'letters' — the story as keepsake love letters: tilted
+        // stationery cards, dated like dispatches and sealed in wax.
+        if (tpl.layout === 'letters') {
+            return sectionOpen(tpl) +
+                secHead('Our Journey', 'Letters Between Us') +
+                '<div class="slets">' +
+                D.story.map(function (s, i) {
+                    return '<article class="slet' + (i % 2 ? ' slet-r' : '') + '">' +
+                        '<span class="slet-seal serif">' + D.bride.initial + D.groom.initial + '</span>' +
+                        '<p class="slet-year">' + s.year + '</p>' +
+                        '<h3 class="slet-title script">' + s.title + '</h3>' +
+                        '<p class="slet-text">' + s.text + '</p>' +
+                        '</article>';
+                }).join('') +
+                '</div></section>';
+        }
+        // 'gazette' — the love story as a broadsheet front page:
+        // masthead, column rules, the first chapter running as the lead.
+        if (tpl.layout === 'gazette') {
+            return sectionOpen(tpl) +
+                '<div class="gaz">' +
+                '<header class="gaz-mast">' +
+                '<p class="gaz-eyebrow">Special Love Edition</p>' +
+                '<h2 class="gaz-paper serif">The ' + D.bride.short + ' &amp; ' + D.groom.short + ' Gazette</h2>' +
+                '<div class="gaz-mastline"><span>' + D.city + '</span><span>' + D.dateShort + '</span><span>' + D.hashtag + '</span></div>' +
+                '</header>' +
+                '<div class="gaz-cols" style="--gazc:' + Math.max(1, Math.min(3, D.story.length - 1)) + '">' +
+                D.story.map(function (s, i) {
+                    return '<article class="gaz-item' + (i === 0 ? ' gaz-lead' : '') + '">' +
+                        '<p class="gaz-date">' + s.year + '</p>' +
+                        '<h3 class="gaz-head serif">' + s.title + '</h3>' +
+                        '<p class="gaz-text">' + s.text + '</p>' +
+                        '</article>';
+                }).join('') +
+                '</div></div></section>';
+        }
         // Photo layouts: arched frames, editorial rows, numbered chapters
         if (tpl.layout === 'arch') {
             return sectionOpen(tpl) +
@@ -1391,6 +1991,47 @@ window.VV = (function () {
     }
 
     function renderEvents(tpl) {
+        // 'tickets' — each event as a letterpress admission stub with
+        // a perforated edge and a monogrammed 'admit all' end.
+        if (tpl.layout === 'tickets') {
+            return sectionOpen(tpl) +
+                secHead('Save The Date', 'Admission For The Day') +
+                '<div class="tix">' +
+                D.events.map(function (ev, i) {
+                    return '<article class="ticket">' +
+                        '<div class="ticket-main">' +
+                        '<p class="ticket-no">N&ordm; ' + pad2(i + 1) + '</p>' +
+                        '<h3 class="ticket-title serif">' + ev.title + '</h3>' +
+                        '<p class="ticket-meta">' + ev.date + ' &middot; ' + ev.time + '</p>' +
+                        '<p class="ticket-venue">' + ev.venue + ' — ' + ev.addr + '</p>' +
+                        '<a class="btn-ghost" href="' + mapUrl(ev) + '" target="_blank" rel="noopener">View Map</a>' +
+                        '</div>' +
+                        '<div class="ticket-stub">' +
+                        '<span class="ticket-adm">Admit All</span>' +
+                        '<b class="ticket-mono serif">' + D.bride.initial + '&middot;' + D.groom.initial + '</b>' +
+                        '</div></article>';
+                }).join('') +
+                '</div></section>';
+        }
+        // 'procession' — the order of the day advancing down a centre
+        // spine, each stop held by a numbered medallion.
+        if (tpl.layout === 'procession') {
+            return sectionOpen(tpl) +
+                secHead('Save The Date', 'The Order Of The Day') +
+                '<div class="proc">' +
+                D.events.map(function (ev, i) {
+                    return '<div class="proc-item' + (i % 2 ? ' proc-r' : '') + '">' +
+                        '<span class="proc-medal serif">' + pad2(i + 1) + '</span>' +
+                        '<div class="proc-card">' +
+                        '<p class="proc-time">' + ev.time + '</p>' +
+                        '<h3 class="proc-title serif">' + ev.title + '</h3>' +
+                        '<p class="proc-venue">' + ev.venue + ' &middot; ' + ev.addr + '</p>' +
+                        '<a class="btn-ghost" href="' + mapUrl(ev) + '" target="_blank" rel="noopener">Map</a>' +
+                        '</div></div>';
+                }).join('') +
+                '<p class="proc-date">' + D.dateText + '</p>' +
+                '</div></section>';
+        }
         // 'rows' — a quiet ruled schedule instead of cards.
         if (tpl.layout === 'rows') {
             return sectionOpen(tpl) +
@@ -1426,6 +2067,40 @@ window.VV = (function () {
 
     function renderGallery(tpl) {
         const mono = D.bride.initial + ' & ' + D.groom.initial;
+        // 'album' — a keepsake album spread: photographs held by paper
+        // corners, tilted as if pasted in by hand, captioned in script.
+        if (tpl.layout === 'album') {
+            const corners = '<i class="alb-c alb-c1"></i><i class="alb-c alb-c2"></i><i class="alb-c alb-c3"></i><i class="alb-c alb-c4"></i>';
+            return sectionOpen(tpl) +
+                secHead('Moments', 'From Our Album') +
+                '<div class="album">' +
+                '<figure class="alb-ph alb-a">' + corners + '<img src="assets/images/pic-potrait-couple-1.jpg" data-slot="gallery1" alt="Gallery photo" loading="lazy"></figure>' +
+                '<figure class="alb-ph alb-b">' + corners + '<img src="assets/images/pic-landscape-1.jpg" data-slot="gallery2" alt="Gallery photo" loading="lazy"></figure>' +
+                '<div class="alb-note">' +
+                '<span class="script">' + D.bride.short + ' &amp; ' + D.groom.short + '</span>' +
+                '<i>' + D.dateShort + '</i>' +
+                '<em>' + D.hashtag + '</em>' +
+                '</div>' +
+                '<figure class="alb-ph alb-d">' + corners + '<img src="assets/images/pic-gallery-2.jpg" data-slot="gallery3" alt="Gallery photo" loading="lazy"></figure>' +
+                '</div></section>';
+        }
+        // 'exhibit' — a small museum hang: each photograph in a wide
+        // mat with a brass plaque naming the piece.
+        if (tpl.layout === 'exhibit') {
+            const piece = function (cls, img, slot, title, sub) {
+                return '<figure class="exh ' + cls + '">' +
+                    '<div class="exh-mat"><img src="' + img + '" data-slot="' + slot + '" alt="Gallery photo" loading="lazy"></div>' +
+                    '<figcaption class="exh-plaque"><b>' + title + '</b><i>' + sub + '</i></figcaption>' +
+                    '</figure>';
+            };
+            return sectionOpen(tpl) +
+                secHead('Moments', 'A Small Exhibition') +
+                '<div class="exhibit">' +
+                piece('exh-tall', 'assets/images/pic-potrait-couple-1.jpg', 'gallery1', 'The Two Of Us', D.dateShort) +
+                piece('exh-wide', 'assets/images/pic-landscape-1.jpg', 'gallery2', 'Where It Began', D.city) +
+                piece('exh-sq', 'assets/images/pic-gallery-2.jpg', 'gallery3', 'Forever, Framed', D.hashtag) +
+                '</div></section>';
+        }
         // 'salon' — an asymmetric salon-hung wall: one grand portrait,
         // a wide landscape, a caption tile and a square, gallery-style.
         if (tpl.layout === 'salon') {
@@ -1463,6 +2138,55 @@ window.VV = (function () {
             return cal ? '<div class="cd-cta"><a class="btn-ghost" href="' + cal +
                 '" target="_blank" rel="noopener">Save The Date &middot; Add To Calendar</a></div>' : '';
         })();
+        // 'ring' — the day count held inside a fine double ring, the
+        // smaller units orbiting beside it like satellites.
+        if (tpl.layout === 'ring') {
+            return sectionOpen(tpl) +
+                '<div class="cdr" data-countdown="' + D.dateISO + '">' +
+                '<p class="sec-eyebrow">Counting Down To Forever</p>' +
+                '<div class="cdr-orbit">' +
+                '<div class="cdr-ring"><b class="serif" data-cd="d">—</b><span>Days To Go</span></div>' +
+                '<div class="cdr-sats">' +
+                '<span class="cdr-sat"><b class="serif" data-cd="h">—</b><i>Hours</i></span>' +
+                '<span class="cdr-sat"><b class="serif" data-cd="m">—</b><i>Minutes</i></span>' +
+                '<span class="cdr-sat"><b class="serif" data-cd="s">—</b><i>Seconds</i></span>' +
+                '</div></div>' +
+                '<p class="cd-date">' + D.dateText + ' &middot; ' + D.city + '</p>' +
+                calBtn +
+                '</div></section>';
+        }
+        // 'calendar' — a stationery leaf of the wedding month, the day
+        // itself circled, the live count reading beneath.
+        if (tpl.layout === 'calendar') {
+            const dt = new Date(D.dateISO);
+            let leaf = '';
+            if (!isNaN(dt.getTime())) {
+                const y = dt.getFullYear(), mo = dt.getMonth(), day = dt.getDate();
+                const lead = new Date(y, mo, 1).getDay(), days = new Date(y, mo + 1, 0).getDate();
+                let cells = ['S', 'M', 'T', 'W', 'T', 'F', 'S'].map(function (w) {
+                    return '<span class="cdcal-wd">' + w + '</span>';
+                }).join('');
+                for (let b = 0; b < lead; b++) cells += '<span class="cdcal-day cdcal-blank"></span>';
+                for (let n = 1; n <= days; n++) {
+                    cells += '<span class="cdcal-day' + (n === day ? ' cdcal-hit' : '') + '">' + n + '</span>';
+                }
+                leaf = '<div class="cdcal-leaf">' +
+                    '<p class="cdcal-month serif">' + MONTHS[mo] + ' ' + y + '</p>' +
+                    '<div class="cdcal-grid">' + cells + '</div>' +
+                    '</div>';
+            }
+            return sectionOpen(tpl) +
+                secHead('Save The Date', 'The Month Of Us') +
+                '<div class="cdcal" data-countdown="' + D.dateISO + '">' +
+                leaf +
+                '<p class="cdi-line">' +
+                units.map(function (u) {
+                    return '<span class="cdi-u"><b class="serif" data-cd="' + u[0] + '">—</b> ' + u[1].toLowerCase() + '</span>';
+                }).join('<i class="cdi-dot">·</i>') +
+                '</p>' +
+                calBtn +
+                '</div></section>';
+        }
         // 'inline' — the date itself is the hero: oversized numerals
         // with the live count reading like a sentence beneath.
         if (tpl.layout === 'inline') {
@@ -1498,6 +2222,49 @@ window.VV = (function () {
                 return '<li class="wish"><p class="wish-text">“' + w.text + '”</p><p class="wish-by">— ' + w.by + '</p></li>';
             }).join('') +
             '</ul>';
+        // 'envelope' — the reply as a sealed envelope: a folded flap
+        // closed with a wax monogram seal, the fields tucked inside.
+        if (tpl.layout === 'envelope') {
+            return sectionOpen(tpl) +
+                secHead('RSVP &amp; Wishes', 'Seal Your Reply') +
+                '<div class="renv">' +
+                '<form class="renv-card" data-rsvp>' +
+                '<i class="renv-flap"></i>' +
+                '<span class="renv-seal serif">' + D.bride.initial + D.groom.initial + '</span>' +
+                '<p class="renv-line">Kindly reply before ' + D.dateText + '</p>' +
+                '<input class="rsvp-input" name="guest" type="text" placeholder="Your name" required>' +
+                '<div class="rsvp-select"><select class="rsvp-input" name="attend">' +
+                '<option>Joyfully accepts</option><option>Regretfully declines</option>' +
+                '</select><i class="rsvp-caret"></i></div>' +
+                '<textarea class="rsvp-input" name="wish" rows="3" placeholder="Slip a note inside&hellip;"></textarea>' +
+                '<button type="submit" class="btn-solid">Send It Sealed</button>' +
+                '<p class="rsvp-note">Preview only — responses are not stored.</p>' +
+                '</form>' +
+                '<div class="renv-wishes">' + wishesList + '</div>' +
+                '</div></section>';
+        }
+        // 'guestbook' — a ruled guest-book page: wishes read as inked
+        // entries, the reply penned straight onto the lines.
+        if (tpl.layout === 'guestbook') {
+            return sectionOpen(tpl) +
+                secHead('RSVP &amp; Wishes', 'The Guest Book') +
+                '<div class="gbook">' +
+                '<form class="gbook-card" data-rsvp>' +
+                '<p class="gbook-open serif">Leave us a line to keep</p>' +
+                '<label class="gbook-field"><span>Signed</span>' +
+                '<input class="gbook-input" name="guest" type="text" placeholder="Your name" required></label>' +
+                '<label class="gbook-field"><span>Attending</span>' +
+                '<span class="rsvp-select"><select class="gbook-input" name="attend">' +
+                '<option>Joyfully accepts</option><option>Regretfully declines</option>' +
+                '</select><i class="rsvp-caret"></i></span></label>' +
+                '<label class="gbook-field"><span>Your entry</span>' +
+                '<textarea class="gbook-input gbook-lines" name="wish" rows="4" placeholder="Write as small or as grand as you like&hellip;"></textarea></label>' +
+                '<button type="submit" class="btn-solid">Sign The Book</button>' +
+                '<p class="rsvp-note">Preview only — responses are not stored.</p>' +
+                '</form>' +
+                '<div class="gbook-wall">' + wishesList + '</div>' +
+                '</div></section>';
+        }
         // 'card' — a stationery reply card: monogram, ruled fields and
         // a respond-by line, with the wish wall flowing beneath it.
         if (tpl.layout === 'card') {
@@ -1538,6 +2305,30 @@ window.VV = (function () {
     }
 
     function renderQuote(tpl) {
+        // 'dropcap' — the verse set like the first page of a fine
+        // book, opened by one great illuminated initial.
+        if (tpl.layout === 'dropcap') {
+            const cap = firstGlyph(D.quote.text);
+            const rest = String(D.quote.text).slice(cap.length);
+            return sectionOpen(tpl) +
+                '<div class="qdc">' +
+                '<p class="qdc-eyebrow">A Verse We Keep</p>' +
+                '<i class="qdc-rule"></i>' +
+                '<p class="qdc-text serif"><b class="qdc-cap serif">' + cap + '</b>' + rest + '</p>' +
+                '<cite class="qdc-cite">— ' + D.quote.cite + '</cite>' +
+                '<i class="qdc-rule"></i>' +
+                '</div></section>';
+        }
+        // 'poster' — the verse at gallery-poster scale, drifting over
+        // a giant ghosted quotation mark.
+        if (tpl.layout === 'poster') {
+            return sectionOpen(tpl) +
+                '<div class="qpost">' +
+                '<span class="qpost-mark serif" aria-hidden="true">&ldquo;</span>' +
+                '<blockquote class="qpost-text serif">' + D.quote.text + '</blockquote>' +
+                '<cite class="qpost-cite"><i></i>' + D.quote.cite + '</cite>' +
+                '</div></section>';
+        }
         // 'photo' — the verse floats over a photograph, tinted through
         // a theme-coloured veil so it reads in any palette.
         if (tpl.layout === 'photo') {
@@ -1559,6 +2350,46 @@ window.VV = (function () {
     }
 
     function renderGift(tpl) {
+        // 'parcel' — each envelope as a wrapped gift box: dotted
+        // paper, crossed ribbon and a bow, details on the label.
+        if (tpl.layout === 'parcel') {
+            return sectionOpen(tpl) +
+                secHead('Wedding Gift', 'Wrapped With Love') +
+                '<p class="gift-note">Your presence is the greatest gift of all. Should you wish to honour us with more, a digital envelope is gratefully received.</p>' +
+                '<div class="parcels">' +
+                D.gifts.map(function (gf) {
+                    return '<article class="parcel">' +
+                        '<i class="parcel-rib-v"></i><i class="parcel-rib-h"></i>' +
+                        '<span class="parcel-bow"><i></i><i></i></span>' +
+                        '<div class="parcel-label">' +
+                        '<p class="parcel-bank">' + gf.bank + '</p>' +
+                        '<p class="parcel-acc serif">' + gf.acc + '</p>' +
+                        '<p class="parcel-holder">' + gf.holder + '</p>' +
+                        '<button type="button" class="btn-ghost" data-copy="' + gf.acc.replace(/[^0-9a-zA-Z]/g, '') + '">Copy</button>' +
+                        '</div></article>';
+                }).join('') +
+                '</div></section>';
+        }
+        // 'tags' — the accounts as gift tags strung along a twine
+        // line, each swaying at its own angle.
+        if (tpl.layout === 'tags') {
+            return sectionOpen(tpl) +
+                secHead('Wedding Gift', 'Tokens On A String') +
+                '<p class="gift-note">Your presence is the greatest gift of all. Should you wish to honour us with more, a digital envelope is gratefully received.</p>' +
+                '<div class="gtags">' +
+                '<i class="gtags-line"></i>' +
+                '<div class="gtags-row">' +
+                D.gifts.map(function (gf, i) {
+                    return '<article class="gtag' + (i % 2 ? ' gtag-r' : '') + '">' +
+                        '<i class="gtag-string"></i><span class="gtag-hole"></span>' +
+                        '<p class="gtag-bank">' + gf.bank + '</p>' +
+                        '<p class="gtag-acc serif">' + gf.acc + '</p>' +
+                        '<p class="gtag-holder">' + gf.holder + '</p>' +
+                        '<button type="button" class="btn-ghost" data-copy="' + gf.acc.replace(/[^0-9a-zA-Z]/g, '') + '">Copy</button>' +
+                        '</article>';
+                }).join('') +
+                '</div></div></section>';
+        }
         // 'ledger' — one elegant registry card: accounts as fine ruled
         // rows rather than separate envelopes.
         if (tpl.layout === 'ledger') {
@@ -1595,6 +2426,43 @@ window.VV = (function () {
 
     function renderAttire(tpl) {
         const pal = THEMES[tpl.theme].dress;
+        // 'fan' — the dress palette fanned out like a deck of swatch
+        // cards held in hand.
+        if (tpl.layout === 'fan') {
+            return sectionOpen(tpl) +
+                secHead('What To Wear', 'The Swatch Fan') +
+                '<div class="fanw">' +
+                '<div class="fan" aria-hidden="true">' +
+                pal.map(function (c, i) {
+                    return '<span class="fan-card" style="background:' + c + ';--fi:' + i + '"></span>';
+                }).join('') +
+                '</div>' +
+                '<div class="fan-copy">' +
+                '<p class="attire-code serif">' + D.attire.code + '</p>' +
+                '<p class="attire-note">' + D.attire.note + '</p>' +
+                '<p class="attire-pal-lab">Suggested Palette</p>' +
+                '</div></div></section>';
+        }
+        // 'wardrobe' — the palette hung like pressed garments on a
+        // rail, each swatch from its own fine hanger.
+        if (tpl.layout === 'wardrobe') {
+            return sectionOpen(tpl) +
+                secHead('What To Wear', 'From The Rail') +
+                '<div class="ward">' +
+                '<i class="ward-rail"></i>' +
+                '<div class="ward-row" aria-hidden="true">' +
+                pal.map(function (c) {
+                    return '<span class="ward-item">' +
+                        '<i class="ward-hook"></i><i class="ward-bar"></i>' +
+                        '<i class="ward-swatch" style="background:' + c + '"></i>' +
+                        '</span>';
+                }).join('') +
+                '</div>' +
+                '<p class="attire-code serif">' + D.attire.code + '</p>' +
+                '<p class="attire-note">' + D.attire.note + '</p>' +
+                '<p class="attire-pal-lab">Suggested Palette</p>' +
+                '</div></section>';
+        }
         // 'runway' — the palette becomes the design: tall fabric-swatch
         // bars beneath an oversized dress-code line.
         if (tpl.layout === 'runway') {
@@ -1622,6 +2490,36 @@ window.VV = (function () {
     }
 
     function renderFaq(tpl) {
+        // 'dialogue' — the questions as a courteous exchange of
+        // letters: asked from one side, answered from the other.
+        if (tpl.layout === 'dialogue') {
+            return sectionOpen(tpl) +
+                secHead('Good To Know', 'You Asked, We Answered') +
+                '<div class="fdia">' +
+                D.faqs.map(function (f) {
+                    return '<div class="fdia-pair">' +
+                        '<div class="fdia-q"><span class="fdia-badge script">Q</span><p>' + f.q + '</p></div>' +
+                        '<div class="fdia-a"><span class="fdia-badge serif">A</span><p>' + f.a + '</p></div>' +
+                        '</div>';
+                }).join('') +
+                '</div></section>';
+        }
+        // 'notes' — a quiet programme-notes column: each question in
+        // small caps beneath a leaf ornament, the answer set below.
+        if (tpl.layout === 'notes') {
+            return sectionOpen(tpl) +
+                secHead('Good To Know', 'Notes For Our Guests') +
+                '<div class="fnotes">' +
+                D.faqs.map(function (f, i) {
+                    return (i ? '<i class="fnote-rule"></i>' : '') +
+                        '<div class="fnote">' +
+                        '<span class="fnote-orn">❧</span>' +
+                        '<h3 class="fnote-q">' + f.q + '</h3>' +
+                        '<p class="fnote-a">' + f.a + '</p>' +
+                        '</div>';
+                }).join('') +
+                '</div></section>';
+        }
         // 'grid' — every answer open at once: numbered editorial cards
         // in a two-column spread instead of an accordion.
         if (tpl.layout === 'grid') {
@@ -1648,6 +2546,51 @@ window.VV = (function () {
     }
 
     function renderParty(tpl) {
+        // 'medallion' — every member struck as an initial medallion,
+        // the two sides gathered around their headings.
+        if (tpl.layout === 'medallion') {
+            const group = function (title, list) {
+                return '<div class="pmed-group">' +
+                    '<p class="pmed-side">' + title + '</p>' +
+                    '<div class="pmed-grid">' +
+                    list.map(function (p) {
+                        const gl = firstGlyph(p.name);
+                        const ini = gl.length === 1 ? gl.toUpperCase() : gl;
+                        return '<div class="pmed-p">' +
+                            '<span class="pmed-ring serif">' + ini + '</span>' +
+                            '<b class="pmed-name serif">' + p.name + '</b>' +
+                            '<i class="pmed-role">' + p.role + '</i>' +
+                            '</div>';
+                    }).join('') +
+                    '</div></div>';
+            };
+            return sectionOpen(tpl) +
+                secHead('With Us On The Day', 'The Inner Circle') +
+                '<div class="pmed">' +
+                group('By Her Side', D.party.bridesmaids) +
+                group('By His Side', D.party.groomsmen) +
+                '</div></section>';
+        }
+        // 'playbill' — the party billed like an opening-night cast
+        // list, names and roles joined by dotted leaders.
+        if (tpl.layout === 'playbill') {
+            const act = function (title, list) {
+                return '<p class="pbill-act">' + title + '</p>' +
+                    list.map(function (p) {
+                        return '<div class="pbill-row">' +
+                            '<b class="serif">' + p.name + '</b>' +
+                            '<i class="pbill-dots"></i>' +
+                            '<span>' + p.role + '</span>' +
+                            '</div>';
+                    }).join('');
+            };
+            return sectionOpen(tpl) +
+                secHead('With Us On The Day', 'The Playbill') +
+                '<div class="pbill">' +
+                act('Act I &middot; By Her Side', D.party.bridesmaids) +
+                act('Act II &middot; By His Side', D.party.groomsmen) +
+                '</div></section>';
+        }
         // 'roll' — a centred roll call: each side announced with an
         // eyebrow, names flowing in one graceful line.
         if (tpl.layout === 'roll') {
@@ -1691,6 +2634,32 @@ window.VV = (function () {
     }
 
     function renderStream(tpl) {
+        // 'onair' — a broadcast-studio lamp glowing above the
+        // invitation to watch from anywhere.
+        if (tpl.layout === 'onair') {
+            return sectionOpen(tpl) +
+                secHead('From Anywhere In The World', 'The Broadcast') +
+                '<div class="onair">' +
+                '<div class="onair-lamp"><i class="onair-dot"></i><b>On Air</b></div>' +
+                '<p class="stream-note">' + D.stream.note + '</p>' +
+                '<a class="btn-solid" href="' + D.stream.url + '" target="_blank" rel="noopener">▶&nbsp;&nbsp;Watch The Livestream</a>' +
+                '<p class="stream-hint">The lamp lights up thirty minutes before the ceremony begins.</p>' +
+                '</div></section>';
+        }
+        // 'wave' — a fine animated soundwave carrying the invitation
+        // to tune in.
+        if (tpl.layout === 'wave') {
+            let bars = '';
+            for (let w = 0; w < 24; w++) bars += '<i style="--wi:' + w + '"></i>';
+            return sectionOpen(tpl) +
+                secHead('From Anywhere In The World', 'Tune In With Us') +
+                '<div class="swave">' +
+                '<div class="swave-bars" aria-hidden="true">' + bars + '</div>' +
+                '<p class="stream-note">' + D.stream.note + '</p>' +
+                '<a class="btn-ghost" href="' + D.stream.url + '" target="_blank" rel="noopener">▶&nbsp;&nbsp;Watch Live</a>' +
+                '<p class="stream-hint">The link goes live thirty minutes before the ceremony begins.</p>' +
+                '</div></section>';
+        }
         // 'theatre' — a cinema screen: a still of the couple behind a
         // play button, so the card feels like the broadcast itself.
         if (tpl.layout === 'theatre') {
@@ -1745,12 +2714,58 @@ window.VV = (function () {
                 '<div class="strip"><div class="strip-track strip-rev">' + frames(STRIP_IMGS.slice(5), 5) + '</div></div>' +
                 '</section>';
         }
+        // 'clothesline' — prints pinned to a line, drifting past like
+        // washing in a gentle breeze.
+        if (tpl.layout === 'clothesline') {
+            const pinned = STRIP_IMGS.concat(STRIP_IMGS).map(function (src, i) {
+                const slot = STRIP_SLOTS[i % STRIP_IMGS.length];
+                return '<figure class="cline-item">' +
+                    '<i class="cline-pin"></i>' +
+                    '<img src="' + src + '"' + (slot ? ' data-slot="' + slot + '"' : '') +
+                    ' loading="lazy" alt="Wedding moment">' +
+                    '</figure>';
+            }).join('');
+            return sectionOpen(tpl, 'tpl-slim strip-cline') +
+                '<div class="strip cline"><i class="cline-rope"></i>' +
+                '<div class="strip-track cline-track">' + pinned + '</div>' +
+                '</div></section>';
+        }
+        // 'film' — a true cinema strip: sprocket holes running above
+        // and below the frames as the reel winds by.
+        if (tpl.layout === 'film') {
+            return sectionOpen(tpl, 'tpl-slim strip-filmreel') +
+                '<div class="film">' +
+                '<i class="film-holes"></i>' +
+                '<div class="strip"><div class="strip-track">' + frames(STRIP_IMGS, 0) + '</div></div>' +
+                '<i class="film-holes"></i>' +
+                '</div></section>';
+        }
         return sectionOpen(tpl, 'tpl-slim') +
             '<div class="strip"><div class="strip-track">' + frames(STRIP_IMGS, 0) + '</div></div>' +
             '</section>';
     }
 
     function renderDivider(tpl) {
+        // 'flourish' — a calligraphic breath: the ampersand trailing
+        // long hairline swashes to either side.
+        if (tpl.layout === 'flourish') {
+            return sectionOpen(tpl, 'tpl-slim') +
+                '<div class="divider-inner flourish">' +
+                '<i class="fl-swash fl-l"></i>' +
+                '<span class="fl-amp script">&amp;</span>' +
+                '<i class="fl-swash fl-r"></i>' +
+                '</div></section>';
+        }
+        // 'laurel' — the initials held in a fine ring between
+        // mirrored leaf ornaments.
+        if (tpl.layout === 'laurel') {
+            return sectionOpen(tpl, 'tpl-slim') +
+                '<div class="divider-inner laurel">' +
+                '<span class="laurel-leaf">❧</span>' +
+                '<span class="laurel-ring"><b class="serif">' + D.bride.initial + '&nbsp;·&nbsp;' + D.groom.initial + '</b></span>' +
+                '<span class="laurel-leaf laurel-flip">❧</span>' +
+                '</div></section>';
+        }
         // 'crest' — the initials sealed inside a rotated diamond, with
         // the wedding date set quietly beneath.
         if (tpl.layout === 'crest') {
@@ -1776,6 +2791,46 @@ window.VV = (function () {
         const cta = '<div class="travel-cta">' +
             '<a class="btn-ghost" href="' + cityMapUrl() + '" target="_blank" rel="noopener">Explore ' + D.city + '</a>' +
             '</div>';
+        // 'postcard' — each tip as a tilted postcard: message on the
+        // left, stamp, postmark and address rules on the right.
+        if (tpl.layout === 'postcard') {
+            return sectionOpen(tpl) +
+                secHead('Getting There', 'Postcards For The Journey') +
+                '<div class="pcards">' +
+                D.travel.map(function (t, i) {
+                    return '<article class="pcard' + (i % 2 ? ' pcard-r' : '') + '">' +
+                        '<div class="pcard-msg">' +
+                        '<h3 class="serif">' + t.title + '</h3>' +
+                        '<p>' + t.text + '</p>' +
+                        '</div>' +
+                        '<i class="pcard-div"></i>' +
+                        '<div class="pcard-addr">' +
+                        '<span class="pcard-stamp">' + t.icon + '</span>' +
+                        '<span class="pcard-post"></span>' +
+                        '<i class="pcard-line"></i><i class="pcard-line"></i><i class="pcard-line"></i>' +
+                        '</div></article>';
+                }).join('') +
+                '</div>' + cta + '</section>';
+        }
+        // 'concierge' — one letterheaded card from the concierge
+        // desk, the guidance numbered line by line.
+        if (tpl.layout === 'concierge') {
+            return sectionOpen(tpl) +
+                secHead('Getting There', 'At Your Service') +
+                '<div class="conc">' +
+                '<header class="conc-head">' +
+                '<p class="conc-title serif">The Concierge Desk</p>' +
+                '<p class="conc-sub">' + D.city + ' &middot; for our honoured guests</p>' +
+                '</header>' +
+                D.travel.map(function (t, i) {
+                    return '<div class="conc-row">' +
+                        '<span class="conc-num serif">' + pad2(i + 1) + '</span>' +
+                        '<span class="conc-ico">' + t.icon + '</span>' +
+                        '<div class="conc-copy"><h3 class="serif">' + t.title + '</h3><p>' + t.text + '</p></div>' +
+                        '</div>';
+                }).join('') +
+                '</div>' + cta + '</section>';
+        }
         // 'route' — an itinerary drawn as a single journey line with
         // stops, the way a travel journal maps a trip.
         if (tpl.layout === 'route') {
@@ -1807,6 +2862,132 @@ window.VV = (function () {
 
     function renderOutro(tpl) {
         const names = D.bride.short + ' &amp; ' + D.groom.short;
+        // 'credits' — the day signs off like a film: a cast of two
+        // rolled as closing credits that end at the beginning.
+        if (tpl.layout === 'credits') {
+            const row = function (role, name) {
+                return '<div class="ocred-row"><span class="ocred-role">' + role + '</span>' +
+                    '<b class="ocred-name serif">' + name + '</b></div>';
+            };
+            return sectionOpen(tpl, 'tpl-full') +
+                '<div class="outro-inner ocred">' +
+                '<p class="sec-eyebrow">The Celebration Of A Lifetime</p>' +
+                row('The Bride', D.bride.name) +
+                row('The Groom', D.groom.name) +
+                row('The Setting', D.city) +
+                row('The Date', D.dateText) +
+                row('Special Thanks', 'Every single one of you') +
+                '<h2 class="ocred-end script">The Beginning</h2>' +
+                '<p class="outro-tag">' + D.hashtag + '</p>' +
+                '</div></section>';
+        }
+        // 'postscript' — the farewell as the letter's last line: a
+        // P.S. on fine stationery, signed and sealed.
+        if (tpl.layout === 'postscript') {
+            return sectionOpen(tpl, 'tpl-full') +
+                '<div class="outro-inner">' +
+                '<div class="ops-card">' +
+                '<span class="ops-ps script">P.S.</span>' +
+                '<p class="ops-text serif">The best is yet to come — and it begins with you there.</p>' +
+                '<p class="ops-sign script">' + names + '</p>' +
+                '<p class="ops-meta">' + D.dateText + ' &middot; ' + D.city + '</p>' +
+                '<span class="ops-seal serif">' + D.bride.initial + D.groom.initial + '</span>' +
+                '</div>' +
+                '<p class="outro-tag">' + D.hashtag + '</p>' +
+                '</div></section>';
+        }
+        // 'echo' — the two names repeating into the distance, the
+        // faintest row only an outline, signed with the date.
+        if (tpl.layout === 'echo') {
+            let rows = '';
+            for (let e = 0; e < 4; e++) {
+                rows += '<p class="oecho-row serif' + (e === 3 ? ' oecho-ghost' : '') +
+                    '" style="--oe:' + e + '"><span>' + names + '</span></p>';
+            }
+            return sectionOpen(tpl, 'tpl-full') +
+                '<div class="outro-inner oecho">' +
+                '<p class="sec-eyebrow">Until We Meet Again</p>' +
+                rows +
+                '<p class="oecho-meta">See you there &middot; ' + D.dateText + '</p>' +
+                '<p class="outro-tag">' + D.hashtag + '</p>' +
+                '</div></section>';
+        }
+        // 'stars' — a hand-set constellation: the two initials as
+        // named stars, joined by one line across the sky.
+        if (tpl.layout === 'stars') {
+            const dots = [[8, 58], [16, 24], [30, 72], [44, 12], [58, 66], [72, 20], [86, 52], [64, 42]]
+                .map(function (p, i) {
+                    return '<i class="ost-dot" style="left:' + p[0] + '%;top:' + p[1] + '%;--tw:' + i + '"></i>';
+                }).join('');
+            return sectionOpen(tpl, 'tpl-full') +
+                '<div class="outro-inner ost">' +
+                '<p class="sec-eyebrow">Written In The Stars</p>' +
+                '<div class="ost-sky" aria-hidden="true">' + dots +
+                '<span class="ost-star ost-a"><b class="serif">' + D.bride.initial + '</b></span>' +
+                '<i class="ost-link"></i>' +
+                '<span class="ost-star ost-b"><b class="serif">' + D.groom.initial + '</b></span>' +
+                '</div>' +
+                '<p class="outro-text">Two names set side by side in the sky — thank you for shining with us.</p>' +
+                '<p class="outro-names script">' + names + '</p>' +
+                '<p class="outro-tag">' + D.hashtag + '</p>' +
+                '</div></section>';
+        }
+        // 'toast' — two fine-line champagne coupes mid-clink, bubbles
+        // rising, the send-off signed beneath.
+        if (tpl.layout === 'toast') {
+            const glass = function (side) {
+                return '<span class="otg ' + side + '">' +
+                    '<i class="otg-bowl"><i class="otg-fill"></i></i>' +
+                    '<i class="otg-stem"></i><i class="otg-foot"></i>' +
+                    '</span>';
+            };
+            return sectionOpen(tpl, 'tpl-full') +
+                '<div class="outro-inner otoast">' +
+                '<p class="sec-eyebrow">Raise A Glass</p>' +
+                '<div class="otoast-glasses" aria-hidden="true">' +
+                '<i class="otoast-spark serif">✦</i>' +
+                '<i class="otoast-bub b1"></i><i class="otoast-bub b2"></i><i class="otoast-bub b3"></i>' +
+                glass('otg-l') + glass('otg-r') +
+                '</div>' +
+                '<p class="outro-text">Save us a dance and a toast — the first of forever is on us.</p>' +
+                '<p class="outro-names script">' + names + '</p>' +
+                '<p class="outro-tag">' + D.hashtag + '</p>' +
+                '</div></section>';
+        }
+        // 'rings' — the two wedding bands interlocked, an initial
+        // resting in each.
+        if (tpl.layout === 'rings') {
+            return sectionOpen(tpl, 'tpl-full') +
+                '<div class="outro-inner orings">' +
+                '<p class="sec-eyebrow">Two Rings &middot; One Promise</p>' +
+                '<div class="orings-pair" aria-hidden="true">' +
+                '<span class="oring oring-l"><b class="serif">' + D.bride.initial + '</b></span>' +
+                '<span class="oring oring-r"><b class="serif">' + D.groom.initial + '</b></span>' +
+                '</div>' +
+                '<p class="orings-date">' + D.dateShort + '</p>' +
+                '<p class="outro-text">From this day on, everything we do, we do together.</p>' +
+                '<p class="outro-names script">' + names + '</p>' +
+                '<p class="outro-tag">' + D.hashtag + '</p>' +
+                '</div></section>';
+        }
+        // 'bunting' — THANK YOU spelled out on pennant flags strung
+        // across the page, the send-off signed beneath.
+        if (tpl.layout === 'bunting') {
+            let flags = '';
+            'THANK YOU'.split('').forEach(function (ch) {
+                flags += ch === ' '
+                    ? '<i class="obun-gap"></i>'
+                    : '<span class="obun-flag"><b class="serif">' + ch + '</b></span>';
+            });
+            return sectionOpen(tpl, 'tpl-full') +
+                '<div class="outro-inner obun">' +
+                '<p class="sec-eyebrow">From The Two Of Us</p>' +
+                '<div class="obun-row" aria-label="Thank you"><i class="obun-string"></i>' + flags + '</div>' +
+                '<p class="outro-text">For the love, the laughter and every mile travelled — thank you, truly.</p>' +
+                '<p class="outro-names script">' + names + '</p>' +
+                '<p class="outro-tag">' + D.hashtag + '</p>' +
+                '</div></section>';
+        }
         // 'signoff' — the couple's names, written large in script, ARE
         // the farewell: a signature at the end of the letter.
         if (tpl.layout === 'signoff') {
@@ -2040,7 +3221,21 @@ window.VV = (function () {
         '.sarch-item', '.sed-row', '.chap-item',
         '.cpanels > *', '.sal-item', '.cdi > *', '.rsvpc-card', '.rsvpc-wishes',
         '.ledger > *', '.runway > *', '.faqg-item', '.route-stop', '.roll > *',
-        '.theatre > *', '.lm-inner > *', '.lm-strip', '.lf-frame > *'
+        '.theatre > *', '.lm-inner > *', '.lm-strip', '.lf-frame > *',
+        // Wrapper-level entries (.slets, .album, .pcards, .gtags-row)
+        // keep their children's decorative tilts: .tpl-in .rv resets
+        // transform, so rotated cards must not be reveal targets.
+        '.cameos > *', '.duet > *:not(.duet-mark)', '.slets',
+        '.gaz-mast', '.gaz-item', '.ticket', '.proc-item', '.proc-date',
+        '.album', '.exh', '.cdr > *', '.cdcal > *',
+        '.renv-card', '.renv-wishes', '.gbook-card', '.gbook-wall',
+        '.qdc > *', '.qpost > *:not(.qpost-mark)',
+        '.parcel', '.gtags-row', '.fanw > *', '.ward > *',
+        '.fdia-pair', '.fnote', '.fnote-rule', '.pcards', '.conc > *',
+        '.pmed-group', '.pbill > *', '.onair > *', '.swave > *',
+        // .lb-strip is deliberately absent: the booth strip is tilted,
+        // and the reveal cascade would reset its transform.
+        '.lc-mast', '.lc-copy > *', '.lb-copy > *'
     ].join(', ');
 
     function initInteractions(root) {
@@ -2051,7 +3246,8 @@ window.VV = (function () {
             // cover them all so no design silently drops the greeting.
             const host = root.querySelector(
                 '.tpl-landing .land-inner, .tpl-landing .land-copy, ' +
-                '.tpl-landing .lm-inner, .tpl-landing .lf-frame, .tpl-landing .villa-copy');
+                '.tpl-landing .lm-inner, .tpl-landing .lf-frame, .tpl-landing .villa-copy, ' +
+                '.tpl-landing .lc-copy, .tpl-landing .lb-copy');
             if (host && !host.querySelector('.guest-line')) {
                 const div = document.createElement('div');
                 div.className = 'guest-line';
@@ -2523,6 +3719,95 @@ window.VV = (function () {
                 return '<span class="th-col"><span class="th-tl"><i class="th-photo"></i><i class="th-line w40"></i></span><span class="th-tl"><i class="th-line w40"></i><i class="th-photo"></i></span></span>';
             case 'chapters':
                 return '<span class="th-row"><b class="th-num serif">01</b><i class="th-photo"></i><i class="th-line w30"></i></span>';
+            /* Third & fourth designs of each section type */
+            case 'cameo':
+                return '<span class="th-row"><i class="th-oval"></i><b class="th-amp">&amp;</b><i class="th-oval"></i></span>';
+            case 'duet':
+                return '<span class="th-row"><span class="th-col"><i class="th-line w70 acc"></i><i class="th-line w50"></i></span><b class="th-amp th-amp-big">&amp;</b><span class="th-col"><i class="th-line w70 acc"></i><i class="th-line w50"></i></span></span>';
+            case 'letters':
+                return '<span class="th-letter"><i class="th-sealdot"></i><i class="th-line w60"></i><i class="th-line w40"></i></span>';
+            case 'gazette':
+                return '<span class="th-gaz"><i class="th-line w60 acc"></i><span class="th-gazcols"><i></i><i></i><i></i></span></span>';
+            case 'tickets':
+                return '<span class="th-ticket"><span class="th-col"><i class="th-line w50"></i><i class="th-line w30"></i></span><i class="th-perf"></i><i class="th-stub"></i></span>';
+            case 'procession':
+                return '<span class="th-proc"><i class="th-procline"></i><i class="th-procdot p1"></i><i class="th-procdot p2"></i><i class="th-procdot p3"></i></span>';
+            case 'album':
+                return '<span class="th-row"><i class="th-photo th-tilt-l"></i><i class="th-photo th-tilt-r"></i></span><b class="th-script sm">' + D.bride.initial + ' &amp; ' + D.groom.initial + '</b>';
+            case 'exhibit':
+                return '<span class="th-row"><span class="th-exh"><i class="th-mat"></i><i class="th-plaque"></i></span><span class="th-exh"><i class="th-mat"></i><i class="th-plaque"></i></span></span>';
+            case 'ring':
+                return '<span class="th-orbit"><b class="serif">12</b></span><span class="th-row th-dots"><i></i><i></i><i></i></span>';
+            case 'calendar':
+                return '<span class="th-cal"><i class="th-calhead"></i><span class="th-calgrid"><i></i><i></i><i></i><i></i><i class="hit"></i><i></i><i></i><i></i><i></i></span></span>';
+            case 'envelope':
+                return '<span class="th-env"><i class="th-envflap"></i><b class="th-sealdot big"></b></span>';
+            case 'guestbook':
+                return '<span class="th-col"><b class="th-script sm">✎</b><i class="th-line w60"></i><i class="th-line w60"></i></span>';
+            case 'dropcap':
+                return '<span class="th-row"><b class="th-dcap serif">L</b><span class="th-col"><i class="th-line w60"></i><i class="th-line w50"></i><i class="th-line w40"></i></span></span>';
+            case 'poster':
+                return '<b class="th-quote th-quote-big serif">&ldquo;</b><i class="th-line w60"></i><i class="th-line w30"></i>';
+            case 'parcel':
+                return '<span class="th-row"><span class="th-parcel"><i class="th-ribv"></i><i class="th-ribh"></i></span><span class="th-parcel"><i class="th-ribv"></i><i class="th-ribh"></i></span></span>';
+            case 'tags':
+                return '<span class="th-tags"><i class="th-twine"></i><i class="th-tag t1"></i><i class="th-tag t2"></i></span>';
+            case 'fan':
+                return '<span class="th-fan"><i></i><i></i><i></i><i></i></span>';
+            case 'wardrobe':
+                return '<span class="th-ward"><i class="th-rail"></i><span class="th-hangs"><i></i><i></i><i></i><i></i></span></span>';
+            case 'dialogue':
+                return '<span class="th-dia"><i class="th-bub bl"></i><i class="th-bub br"></i></span>';
+            case 'notes':
+                return '<span class="th-col"><b class="th-orn">❧</b><i class="th-line w40"></i><i class="th-line w60"></i></span>';
+            case 'postcard':
+                return '<span class="th-pc"><i class="th-pcdiv"></i><b class="th-pcstamp"></b><i class="th-pcline l1"></i><i class="th-pcline l2"></i></span>';
+            case 'concierge':
+                return '<span class="th-col"><i class="th-line w30 acc"></i><span class="th-tl"><b class="th-num serif sm">01</b><i class="th-line w50"></i></span><span class="th-tl"><b class="th-num serif sm">02</b><i class="th-line w40"></i></span></span>';
+            case 'medallion':
+                return '<span class="th-row"><i class="th-ringlet"></i><i class="th-ringlet"></i><i class="th-ringlet"></i></span><i class="th-line w40"></i>';
+            case 'playbill':
+                return '<span class="th-col"><span class="th-lead"><i class="th-line w20"></i><i class="th-dotlead"></i><i class="th-line w20"></i></span><span class="th-lead"><i class="th-line w20"></i><i class="th-dotlead"></i><i class="th-line w20"></i></span><span class="th-lead"><i class="th-line w20"></i><i class="th-dotlead"></i><i class="th-line w20"></i></span></span>';
+            case 'onair':
+                return '<span class="th-onair">ON AIR</span><i class="th-line w40"></i>';
+            case 'wave':
+                return '<span class="th-wave"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>';
+            case 'clothesline':
+                return '<span class="th-cl"><i class="th-rope"></i><i class="th-clpic c1"></i><i class="th-clpic c2"></i><i class="th-clpic c3"></i></span>';
+            case 'film':
+                return '<span class="th-film"><i class="th-sprk"></i><span class="th-row th-strip"><i></i><i></i><i></i></span><i class="th-sprk"></i></span>';
+            case 'flourish':
+                return '<span class="th-row"><i class="th-swash"></i><b class="th-amp th-amp-big">&amp;</b><i class="th-swash th-swash-r"></i></span>';
+            case 'laurel':
+                return '<span class="th-row"><b class="th-orn">❧</b><i class="th-ringlet big"></i><b class="th-orn th-orn-flip">❧</b></span>';
+            case 'inlay':
+                return '<span class="th-inlay"><b class="serif">' + D.bride.initial + '</b><i class="th-photo"></i><b class="serif">' + D.groom.initial + '</b></span><i class="th-line w40"></i>';
+            case 'veil':
+                return '<span class="th-shade th-veil"><span class="th-veilcard"><i></i><i></i></span></span>';
+            case 'bunting':
+                return '<span class="th-bunt"><i class="th-buntstr"></i><i class="th-flag"></i><i class="th-flag th-flag-acc"></i><i class="th-flag"></i><i class="th-flag th-flag-acc"></i></span><i class="th-line w30"></i>';
+            case 'gatefold':
+                return '<span class="th-gate"><i class="th-gate-seam"></i><b class="th-gate-medal"></b></span><i class="th-line w40"></i>';
+            case 'booth':
+                return '<span class="th-boothrow"><span class="th-booth"><i></i><i></i><i></i></span><span class="th-col"><i class="th-line w70 acc"></i><i class="th-line w50"></i></span></span>';
+            case 'arcade':
+                return '<span class="th-arcade"><i></i><i></i><i></i></span><i class="th-line w30"></i>';
+            case 'stars':
+                return '<span class="th-stars"><i class="d1"></i><i class="d2"></i><i class="d3"></i><b>✦</b><b class="b2">✦</b></span>';
+            case 'toast':
+                return '<span class="th-toast"><i class="th-glass th-gl"></i><b>✦</b><i class="th-glass th-gr"></i></span>';
+            case 'rings':
+                return '<span class="th-orings"><i></i><i></i></span><i class="th-line w30"></i>';
+            case 'cover':
+                return '<span class="th-shade th-cov"><i class="th-covmast"></i><b class="th-covname serif">' + D.bride.initial + ' &amp; ' + D.groom.initial + '</b></span>';
+            case 'premiere':
+                return '<span class="th-prem"><i class="th-prembar"></i><b class="th-title sm">' + D.bride.initial + ' &amp; ' + D.groom.initial + '</b><i class="th-prembar"></i></span>';
+            case 'credits':
+                return '<span class="th-col"><span class="th-credrow"><i class="th-line w20 acc"></i><i class="th-line w30"></i></span><span class="th-credrow"><i class="th-line w20 acc"></i><i class="th-line w30"></i></span><b class="th-script sm">The Beginning</b></span>';
+            case 'postscript':
+                return '<span class="th-ps"><b class="th-script">P.S.</b><i class="th-sealdot th-ps-seal"></i></span><i class="th-line w40"></i>';
+            case 'echo':
+                return '<span class="th-echo"><b class="serif">' + D.bride.initial + ' &amp; ' + D.groom.initial + '</b><b class="serif">' + D.bride.initial + ' &amp; ' + D.groom.initial + '</b><b class="serif">' + D.bride.initial + ' &amp; ' + D.groom.initial + '</b></span>';
         }
         // Full-photograph landing (terra) — show it as a photo cover
         // so it reads differently from the arch landing beside it.

@@ -80,13 +80,17 @@ resetState();
     VV.TEMPLATES.forEach(function (t) {
         byCombo[t.kind + '|' + t.theme] = (byCombo[t.kind + '|' + t.theme] || 0) + 1;
     });
+    // Landing & outro pages carry 9 designs per theme; every mix &
+    // match section type carries 4.
     const under = [];
     TYPES.forEach(function (k) {
+        const min = (k === 'landing' || k === 'outro') ? 9 : 4;
         THEMES.forEach(function (th) {
-            if ((byCombo[k + '|' + th] || 0) < 2) under.push(k + '×' + th);
+            if ((byCombo[k + '|' + th] || 0) < min) under.push(k + '×' + th);
         });
     });
-    check('every section type × theme has ≥ 2 designs (' + TYPES.length * THEMES.length + ' combos)',
+    check('every content type × theme has ≥ 4 designs, landing/outro ≥ 9 (' +
+        TYPES.length * THEMES.length + ' combos)',
         under.length === 0, under.slice(0, 5).join(', '));
 
     const badTheme = VV.TEMPLATES.filter(function (t) { return !VV.THEMES[t.theme]; });
