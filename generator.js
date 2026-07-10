@@ -552,9 +552,8 @@
 
     function addListItem(list) {
         if (pzCounts[list] >= VV.LIST_LIMITS[list].max) return;
-        savePersonalize();                 // capture what's typed so far
         pzCounts[list] += 1;
-        savePersonalize();                 // persist the new count
+        savePersonalize();                 // captures the form AND the new count
         afterListChange();
         // Walk the user to the fresh block: open, scroll, focus.
         const first = document.querySelector(
@@ -1392,6 +1391,13 @@
             });
             return;
         }
+        // Flush any personalize edit still sitting in the 450ms
+        // debounce — the published snapshot must include it, and the
+        // timer would otherwise die with this page.
+        if (pzTimer) {
+            clearTimeout(pzTimer);
+            savePersonalize();
+        }
         const id = store.publish(draft);
         window.location.href = 'preview.html?w=' + id;
     });
@@ -1430,8 +1436,18 @@
             refreshFab();
         }
         if (e.key === 'vv_details') {
+            // Pull EVERYTHING the other tab may have changed — list
+            // sizes and style choices live in module state here, and
+            // leaving them stale would overwrite the other tab's work
+            // (e.g. drop its 4th milestone) on our next save.
+            const det = store.getDetails();
+            pzCounts = VV.getCounts(det);
+            styleBg = (det.style || {}).bg || null;
+            secBgMap = (det.style || {}).secbg || {};
+            trackChoice = VV.TRACKS[(det.style || {}).track] ? (det.style || {}).track : 'photograph';
             VV.refreshData();
-            fillPersonalizeForm();
+            renderPersonalizeForm();
+            renderMediaStudio();
             renderSamples();
             renderLibrary();
         }

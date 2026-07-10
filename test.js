@@ -401,6 +401,58 @@ resetState();
     check('focus-trap helper is exported', typeof VV.trapFocus === 'function');
 }
 
+/* ---------------- 11. Review-fix regressions ---------------- */
+
+describe('Review-fix regressions');
+resetState();
+{
+    // Single-digit hour in a hand-written website code must not
+    // silently revert the whole site to the demo date.
+    VV.store.saveDetails({ date: '2027-03-20', time: '9:30' });
+    const D = VV.data();
+    check('single-digit ceremony hour still derives the custom date',
+        D.dateText === 'Saturday, 20 March 2027' && D.dateISO === '2027-03-20T09:30:00');
+
+    // Base64 codes containing '+' survive URLSearchParams mangling
+    // via the space→'+' retry preview.js performs.
+    resetState();
+    let mangledSurvives = true;
+    for (let i = 0; i < 40 && mangledSurvives; i++) {
+        const code = VV.encodeSite(
+            { landing: 'landing-noir', sections: [], outro: 'outro-noir' },
+            { city: 'x'.repeat(i) + 'José 婚礼 “love”' });
+        if (!code.includes('+')) continue;
+        const mangled = code.replace(/\+/g, ' '); // what URLSearchParams delivers
+        const recovered = VV.decodeSite(mangled) || VV.decodeSite(mangled.replace(/ /g, '+'));
+        if (!recovered || recovered.config.landing !== 'landing-noir') mangledSurvives = false;
+    }
+    check('codes with + survive the preview page space→plus retry', mangledSurvives);
+    const previewSrc2 = fs.readFileSync(path.join(__dirname, 'preview.js'), 'utf8');
+    check("preview.js retries ?c= decode with spaces restored to '+'",
+        /decodeSite\(code\.replace\(\/ \/g, '\+'\)\)/.test(previewSrc2));
+
+    // Guest greeting must have a host container on every landing family.
+    const tplSrc = fs.readFileSync(path.join(__dirname, 'templates.js'), 'utf8');
+    ['lm-inner', 'lf-frame', 'villa-copy', 'land-inner', 'land-copy'].forEach(function (cls) {
+        check('guest-greeting selector covers .' + cls,
+            new RegExp("tpl-landing \\." + cls).test(tplSrc));
+    });
+
+    // QR caption text must stay out of the 4-module quiet zone.
+    check('QR caption baselines sit below the quiet zone',
+        previewSrc2.indexOf('qrPx + 40') !== -1 && previewSrc2.indexOf('qrPx + 4)') === -1);
+
+    // Publishing must flush the pending personalize debounce.
+    const genSrc = fs.readFileSync(path.join(__dirname, 'generator.js'), 'utf8');
+    check('preview button flushes pzTimer before publish',
+        /clearTimeout\(pzTimer\);\s*\n\s*savePersonalize\(\);[\s\S]{0,200}store\.publish/.test(genSrc));
+
+    // Cross-tab details sync must refresh counts and style state.
+    check('storage handler refreshes pzCounts and rebuilds the form',
+        /vv_details'\)[\s\S]{0,600}pzCounts = VV\.getCounts/.test(genSrc) &&
+        /vv_details'\)[\s\S]{0,900}renderPersonalizeForm\(\)/.test(genSrc));
+}
+
 /* ---------------- Result ---------------- */
 
 process.stdout.write('\n' + '─'.repeat(46) + '\n');

@@ -23,7 +23,12 @@
     let mode = null; // 'local' (uuid in this browser) | 'code' (self-contained link)
 
     if (code) {
-        site = VV.decodeSite(code);
+        // Hand-built ?c= links (an operator pasting an emailed code
+        // straight into the address bar) arrive with base64 '+' signs
+        // decoded to spaces by URLSearchParams. A real code never
+        // contains spaces, so if the first decode fails, retry with
+        // them restored.
+        site = VV.decodeSite(code) || VV.decodeSite(code.replace(/ /g, '+'));
         mode = 'code';
     } else if (id) {
         site = store.getSite(id);
@@ -240,10 +245,12 @@
         ctx.textAlign = 'center';
         ctx.fillStyle = '#141414';
         ctx.font = '500 46px "Playfair Display", Georgia, serif';
-        ctx.fillText(coupleNames, qrPx / 2, qrPx + 4);
+        // Baselines sit low enough that no glyph reaches into the
+        // QR's 4-module bottom quiet zone (ISO 18004 requirement).
+        ctx.fillText(coupleNames, qrPx / 2, qrPx + 40);
         ctx.fillStyle = '#8c8c8c';
         ctx.font = '24px Montserrat, Helvetica, sans-serif';
-        ctx.fillText('Scan to open the invitation', qrPx / 2, qrPx + 56);
+        ctx.fillText('Scan to open the invitation', qrPx / 2, qrPx + 92);
         canvas.toBlob(function (blob) {
             if (!blob) {
                 VV.toast('Could not create the QR image in this browser.');

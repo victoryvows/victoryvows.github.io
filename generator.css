@@ -3409,22 +3409,6 @@ select.rsvp-input option {
     margin: 0.3rem 0 1.6rem;
 }
 
-.ms-group-title {
-    font-size: 0.72rem;
-    font-weight: 500;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.75);
-    margin: 1.4rem 0 0.8rem;
-}
-
-.ms-group-title span {
-    letter-spacing: 0.02em;
-    text-transform: none;
-    font-weight: 400;
-    color: rgba(255, 255, 255, 0.38);
-}
-
 .ms-card.ms-dim {
     opacity: 0.65;
 }

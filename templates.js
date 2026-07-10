@@ -216,7 +216,11 @@ window.VV = (function () {
     }
 
     function deriveDates(d, dateStr, timeStr) {
-        const t = (hasText(timeStr) && /^\d{1,2}:\d{2}/.test(timeStr.trim())) ? timeStr.trim().slice(0, 5) : '14:00';
+        // Normalise to HH:MM — single-digit hours ('9:30', natural in
+        // hand-written codes) would otherwise build a non-ISO string
+        // that new Date() rejects, silently keeping the demo date.
+        const tm = hasText(timeStr) ? timeStr.trim().match(/^(\d{1,2}):(\d{2})/) : null;
+        const t = tm ? pad2(parseInt(tm[1], 10)) + ':' + tm[2] : '14:00';
         const dt = new Date(dateStr + 'T' + t + ':00');
         if (isNaN(dt.getTime())) return;
         const wd = WEEKDAYS[dt.getDay()], day = dt.getDate(), mo = MONTHS[dt.getMonth()], yr = dt.getFullYear();
@@ -247,7 +251,6 @@ window.VV = (function () {
         resizeList(d.gifts, 'gifts', counts.gifts);
         resizeList(d.party.bridesmaids, 'bridesmaids', counts.bridesmaids);
         resizeList(d.party.groomsmen, 'groomsmen', counts.groomsmen);
-        d.counts = counts;
         let customNames = false;
         const rawShort = { bride: DEMO.bride.short, groom: DEMO.groom.short };
 
@@ -2044,7 +2047,11 @@ window.VV = (function () {
         // Guest personalization: greet the invitee on the landing and
         // pre-fill the RSVP with their name and reserved seats.
         if (GUEST) {
-            const host = root.querySelector('.tpl-landing .land-inner, .tpl-landing .land-copy');
+            // Every landing layout family has its own inner container —
+            // cover them all so no design silently drops the greeting.
+            const host = root.querySelector(
+                '.tpl-landing .land-inner, .tpl-landing .land-copy, ' +
+                '.tpl-landing .lm-inner, .tpl-landing .lf-frame, .tpl-landing .villa-copy');
             if (host && !host.querySelector('.guest-line')) {
                 const div = document.createElement('div');
                 div.className = 'guest-line';
